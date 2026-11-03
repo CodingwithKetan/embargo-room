@@ -100,6 +100,7 @@ agents:
 
 room:
   name: "embargo-minimist-demo"
+  description: One coordinated disclosure of the minimist prototype-pollution bug (CVE-2020-7598 / CVE-2021-44906), run from report to public advisory.
   bridge: "{bridge}"
   agents: ["embargo-timekeeper", "embargo-repro", "embargo-advisory"]
   users: ["{$creator}", "{vendor}"]
