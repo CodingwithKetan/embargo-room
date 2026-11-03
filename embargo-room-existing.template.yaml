@@ -1,0 +1,34 @@
+# Recovery template: attach the THREE ALREADY-CREATED embargo agents to a room.
+# Use this when embargo-timekeeper / embargo-repro / embargo-advisory already
+# exist under "Your Agents" and only the room + kickoff still need creating
+# (Switch refuses the full one-shot template when the agents already exist).
+#
+# The canonical one-shot template (creates all 3 agents + the room from a clean
+# state, which is what a judge cloning the repo uses) is embargo-room.template.yaml.
+# This file has NO top-level `agents:` block, so it creates nothing but the room;
+# room.agents references the existing agents by name and attaches them.
+
+version: 1
+
+params:
+  bridge:
+    type: bridge
+    input: ask
+    label: Messaging app
+    description: The bundled local Mattermost.
+  vendor:
+    type: user
+    input: ask
+    label: Vendor maintainer handle
+    description: The Mattermost username playing the vendor maintainer.
+
+room:
+  name: "embargo-minimist-demo"
+  description: One coordinated disclosure of the minimist prototype-pollution bug (CVE-2020-7598 / CVE-2021-44906), run from report to public advisory.
+  bridge: "{bridge}"
+  agents: ["embargo-timekeeper", "embargo-repro", "embargo-advisory"]
+  users: ["{$creator}", "{vendor}"]
+
+kickoff: |
+  @embargo-timekeeper this room handles one disclosure from report to
+  advisory. Wait for the researcher's report, then run the process.
