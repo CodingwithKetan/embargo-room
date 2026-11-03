@@ -1,14 +1,38 @@
 # Switch agent + room template for Embargo Room.
-# Switch Console reads this and creates the three agents and the room.
-# Fill {provider-light}, {provider-agent}, {bridge}, {advisory-slug},
-# {vendor-handle} from your Console setup (e.g. provider=claude-code,
-# bridge=mattermost for the local demo).
+# Switch Console reads this (Templates -> Import template -> Use) and creates
+# the three agents and the room. Corrected 2026-11-04 against docs.switchagents.ai:
+#   - provider is "claude" (NOT "claude-code"); the UI label reads "Claude Code"
+#   - every agent needs a directory AND a location, or Switch refuses the run
+#   - Mattermost is the bundled local server (no URL/token for the local demo)
+# On "Use", Console prompts for: location (pick "This computer"), the messaging
+# app (the bundled Mattermost), and the vendor handle.
+
+version: 1
+
+params:
+  location:
+    type: location
+    input: ask
+    label: Where the agents run
+    description: Pick "This computer" for the local demo.
+  bridge:
+    type: bridge
+    input: ask
+    label: Messaging app
+    description: The bundled local Mattermost.
+  vendor:
+    type: user
+    input: ask
+    label: Vendor maintainer handle
+    description: The Mattermost username playing the vendor maintainer.
 
 agents:
   - name: "embargo-timekeeper"
     description: Owns the embargo clock and keeps every party honest about the deadline
     addressing: anyone
-    provider: "{provider-light}"
+    provider: claude
+    location: "{location}"
+    directory: /home/ketan-ghori/projects/embargo-room
     instructions: |
       You are the neutral coordinator of a vulnerability disclosure room.
       You never judge the bug and never write code. You track state and time.
@@ -41,7 +65,9 @@ agents:
   - name: "embargo-repro"
     description: Reproduces the vulnerability and verifies whether a patch actually fixes it
     addressing: owner-agents
-    provider: "{provider-agent}"
+    provider: claude
+    location: "{location}"
+    directory: /home/ketan-ghori/projects/embargo-room
     instructions: |
       You verify, in Docker, using ./verify.sh in this repo. You act only when
       @embargo-timekeeper routes a task to you.
@@ -61,7 +87,9 @@ agents:
   - name: "embargo-advisory"
     description: Drafts the CVE text and public advisory from the room's own history
     addressing: owner-agents
-    provider: "{provider-agent}"
+    provider: claude
+    location: "{location}"
+    directory: /home/ketan-ghori/projects/embargo-room
     instructions: |
       You draft, you do not decide. When @embargo-timekeeper signals
       VERIFIED_FIXED, read the room history and draft: a one-paragraph
@@ -71,10 +99,10 @@ agents:
       to redline. Revise on their edits. Do not publish.
 
 room:
-  name: "embargo-{advisory-slug}"
+  name: "embargo-minimist-demo"
   bridge: "{bridge}"
   agents: ["embargo-timekeeper", "embargo-repro", "embargo-advisory"]
-  users: ["{$creator}", "{vendor-handle}"]
+  users: ["{$creator}", "{vendor}"]
 
 kickoff: |
   @embargo-timekeeper this room handles one disclosure from report to
