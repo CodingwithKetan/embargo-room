@@ -1,0 +1,10 @@
+{
+  "target": "minimist",
+  "deadline": "2026-12-01T00:00:00Z",
+  "now": "2026-11-10T00:00:00Z",
+  "downstreams": [
+    {"package": "rc",       "status": "notified"},
+    {"package": "subarg",   "status": "pending"},
+    {"package": "optimist", "status": "patched"}
+  ]
+}

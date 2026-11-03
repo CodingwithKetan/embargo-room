@@ -1,0 +1,15 @@
+# Layer A: verify a vendor's real patch by git ref.
+# Build with: --build-arg REPO=<url> --build-arg REF=<sha|tag|branch>
+# Clone happens at build time (network); PoC runs offline (--network none).
+FROM node:22-alpine
+RUN apk add --no-cache git
+WORKDIR /app
+ARG REPO
+ARG REF
+RUN git clone --depth 1 --branch "$REF" "$REPO" pkg 2>/dev/null \
+    || (git clone "$REPO" pkg && cd pkg && git checkout "$REF")
+RUN cd pkg \
+    && (npm ci --omit=dev 2>/dev/null || npm install --omit=dev 2>/dev/null || true) \
+    && (npm run build 2>/dev/null || true)
+COPY poc/poc.js /poc/poc.js
+ENTRYPOINT ["node", "/poc/poc.js", "/app/pkg"]

@@ -1,0 +1,22 @@
+{
+  "id": "CVE-PENDING",
+  "component": "minimist (npm)",
+  "type": "Prototype Pollution",
+  "affected_versions": "<= 1.2.5",
+  "fixed_version": "1.2.6",
+  "cvss_v3_1": {
+    "vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L",
+    "base_score": 5.6,
+    "severity": "Medium"
+  },
+  "summary": "A crafted argument walking constructor.constructor.prototype reaches Function.prototype and sets a global property. The 1.2.x fix guarded __proto__ and the Object/Number/String/Array prototypes but not Function.prototype; see the follow-up advisory.",
+  "timeline": [
+    {"state": "REPORTED",       "note": "researcher filed report + PoC"},
+    {"state": "REPRODUCED",     "note": "agent confirmed TRIGGERED on vulnerable build"},
+    {"state": "PATCH_SUBMITTED","note": "vendor submitted 1.2.5"},
+    {"state": "INCOMPLETE_FIX", "note": "agent confirmed still TRIGGERED on 1.2.5"},
+    {"state": "VERIFIED_FIXED", "note": "agent confirmed SAFE on 1.2.6"},
+    {"state": "SIGNED_OFF",     "note": "vendor sign-off in room"},
+    {"state": "PUBLISHED",      "note": "researcher go-to-publish"}
+  ]
+}

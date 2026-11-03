@@ -1,0 +1,20 @@
+# Layer B: child room template, one per confirmed downstream dependent.
+# The SAME embargo-timekeeper agent joins every child room (Switch's
+# "one agent, many rooms"), so it carries embargo state between parent and
+# children. Create one room per entry in downstream/downstream.yaml.
+
+room:
+  name: "embargo-{target}-downstream-{package}"
+  bridge: "{bridge}"
+  # embargo-timekeeper is shared with the parent room; embargo-repro too so a
+  # downstream maintainer's own patch can be verified by git ref in-place.
+  agents: ["embargo-timekeeper", "embargo-repro"]
+  users: ["{$creator}", "{downstream-maintainer-handle}"]
+
+kickoff: |
+  @embargo-timekeeper this is the downstream room for {package}, which depends
+  on {target}. Share the embargo (under the same deadline and secrecy as the
+  parent), confirm {package} is actually affected, and track this maintainer's
+  status: pending -> notified -> patched | wont-fix. Report changes back to the
+  parent room's readiness view. Do not reveal details beyond what the parent
+  embargo allows.
