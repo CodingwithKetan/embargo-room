@@ -30,6 +30,15 @@ reply, and `status` for every countdown. `status` raises SILENCE_EXCEEDED (vendo
 silent past the window -> escalate) and DEADLINE_PASSED (forced coordinated lift,
 matching the deadline backstop in readiness.js).
 
+## Grounding (osv/osv-lookup.js)
+
+Evidence comes from two independent sources that must agree: repro's build-and-
+run of the vendor's real commit, and the public OSV advisory database. The
+Advisory agent takes CVE IDs and affected/fixed ranges from OSV (never from
+memory) and checks each tested version's OSV status against repro's verdict;
+a disagreement becomes [NEEDS HUMAN]. The Timekeeper uses the same lookup to
+assess whether a downstream's resolved version is actually exposed.
+
 ## Handoff (every arrow is a visible room message)
 
 Researcher --report--> Timekeeper --@repro--> Repro --TRIGGERED--> Timekeeper

@@ -120,6 +120,24 @@ The Timekeeper runs these as it drives the state machine (`init` on report,
 countdown). `SILENCE_EXCEEDED` makes it escalate; `DEADLINE_PASSED` forces the
 coordinated lift — the same backstop `readiness.js` uses.
 
+### Grounding — every claim checked against the public record
+
+The Advisory agent never asserts a CVE ID or a version range from memory. It
+looks them up in [OSV](https://osv.dev) (which aggregates GitHub Security
+Advisories, NVD and others) and cross-checks the room's own Docker verdicts:
+
+```bash
+node osv/osv-lookup.js minimist          # both CVEs with exact affected/fixed ranges
+node osv/osv-lookup.js minimist 1.2.5    # AFFECTED (1 advisory)  <- matches repro: TRIGGERED
+node osv/osv-lookup.js minimist 1.2.6    # NOT AFFECTED           <- matches repro: SAFE
+```
+
+Two independent sources — a build-and-run of the vendor's real commit, and the
+authoritative advisory database — have to agree. If they don't, the agent flags
+the conflict for a human instead of picking one. (OSV also confirms the
+incomplete-fix story on its own: at 1.2.5 only CVE-2021-44906 still applies,
+because 1.2.5 had fixed CVE-2020-7598 but not its bypass.)
+
 ### 2. Run the full room
 
 1. Install Switch Console + Docker; run the Switch quickstart.

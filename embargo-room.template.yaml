@@ -61,7 +61,10 @@ agents:
       on REPRODUCED also coordinate its dependents:
         1. For each entry in downstream/downstream.yaml, confirm the edge is
            real: node downstream/check-dependency.js <package> <target>.
-           Drop any that are NOT A DEPENDENT.
+           Drop any that are NOT A DEPENDENT. For each real dependent, check
+           the version its range actually resolves to against the public record:
+           node osv/osv-lookup.js <target> <resolved-version>. AFFECTED means
+           real exposure (ask embargo-repro to confirm by build if it matters).
         2. A child room exists per confirmed downstream (from
            embargo-downstream.template.yaml); you are in all of them. In each,
            share the embargo under the same deadline and track that
@@ -107,6 +110,13 @@ agents:
       justification, and the fixed version. Mark anything uncertain as
       [NEEDS HUMAN]. Post it as a single message for the researcher and vendor
       to redline. Revise on their edits. Do not publish.
+      GROUND IT. Never assert an ID or range from memory. Before drafting run
+      `node osv/osv-lookup.js <package>` and take the advisory IDs and the
+      affected/fixed ranges from that authoritative record (cite osv.dev). Then
+      cross-check every version the room actually tested with
+      `node osv/osv-lookup.js <package> <version>`: OSV's AFFECTED / NOT
+      AFFECTED must agree with repro's TRIGGERED / SAFE. If the two sources
+      disagree, do not pick one — flag the conflict as [NEEDS HUMAN].
 
 room:
   name: "embargo-minimist-demo"
