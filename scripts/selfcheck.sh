@@ -39,6 +39,10 @@ node assure/verify-work.js --against record/embargo-minimist-demo.record.json >/
 echo "== Embargo clock =="
 node clock/clock.js init --scale 30 >/dev/null 2>&1 && node clock/clock.js status >/dev/null 2>&1 && ok "clock init + status" || no "clock failed"
 
+echo "== Bridge layer: failover computes =="
+node bridge/status.js --json >/dev/null 2>&1; rc=$?
+[ $rc -le 1 ] && ok "bridge status/failover computes (exit $rc)" || no "bridge status errored"
+
 echo "== Security: repo allowlist guard =="
 ./verify-ref-local.sh --repo https://github.com/attacker/evil --ref main >/dev/null 2>&1 ; [ $? -eq 3 ] && ok "non-allowlisted repo refused" || no "allowlist did not refuse"
 

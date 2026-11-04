@@ -306,6 +306,21 @@ approval — all gated by default), so a human configures the agents' access. On
 approval, the normal disclosure flow opens. Full design:
 [`docs/watch-mode.md`](docs/watch-mode.md).
 
+## Bridge-agnostic — survive a platform outage
+
+Switch bridges to Slack, Teams, Mattermost, Discord and Telegram, and Embargo Room
+treats the chat app as a **replaceable transport**: a disclosure's truth is its
+portable record + state files, not the platform. If a bridge is down or overloaded,
+re-point to a healthy one and resume from the same verified state.
+
+```bash
+node bridge/status.js                # health of every bridge + the active one
+node bridge/status.js --down slack   # Slack overloaded -> fails over to Mattermost
+```
+
+The record head is **identical on every bridge** — the disclosure never lived in
+the chat. See [`docs/bridges.md`](docs/bridges.md).
+
 ## Securing the agents (the tool itself)
 
 These agents act on chat messages and one of them builds and runs code, so the
@@ -353,6 +368,7 @@ downstream/                       Layer B: check-dependency.js, readiness.js, ma
 record/export-record.js           tamper-evident, hash-chained export of a room's history
 publish/emit-advisory.js          Layer C: emit OSV + CVE 5.0 + GHSA-style advisory from the record
 assure/                           Layer D: attest.js (prove real runs) + verify-work.js (cross-check claims)
+bridge/                           bridge-agnostic failover: status.js + bridges.json (Slack ⇄ Mattermost)
 record/*.record.json              the real run's verifiable records (parent + 3 downstreams)
 dashboard/control-room.html       the control-room dashboard (built from the real run)
 security/repo-allowlist.txt       repos embargo-repro may build; SECURITY.md is the threat model

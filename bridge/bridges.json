@@ -1,0 +1,19 @@
+{
+  "_doc": "Embargo Room is bridge-agnostic. A disclosure's source of truth is its portable, hash-chained record (record/*.record.json) plus its state files (downstream/state.json, the clock, the attestations) — NOT the chat platform. The chat app is a replaceable transport. If a bridge is down or overloaded, re-point the room to a healthy bridge and the disclosure continues from the same verified state. 'enabled' lets an operator take a bridge out of rotation; status.js picks the first enabled + reachable bridge in [primary, ...fallback]. See docs/bridges.md.",
+  "primary": "slack",
+  "fallback": ["mattermost"],
+  "bridges": {
+    "slack": {
+      "kind": "slack",
+      "enabled": true,
+      "health": "https://slack.com/api/api.test",
+      "note": "Connected in Switch Console (Socket Mode). One app posts under each agent's name and icon."
+    },
+    "mattermost": {
+      "kind": "mattermost",
+      "enabled": true,
+      "health": "http://localhost:42111/api/v4/system/ping",
+      "note": "Bundled local server. A bot account per agent in the channel member list."
+    }
+  }
+}
