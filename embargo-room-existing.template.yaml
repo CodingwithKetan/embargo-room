@@ -11,6 +11,12 @@
 version: 1
 
 params:
+  slug:
+    type: string
+    default: minimist-live
+    input: ask
+    label: Room slug
+    description: Used in the room name, e.g. embargo-minimist-live. Pick a NEW slug so it doesn't collide with the closed embargo-minimist-demo room.
   bridge:
     type: bridge
     input: ask
@@ -23,7 +29,7 @@ params:
     description: The Mattermost username playing the vendor maintainer.
 
 room:
-  name: "embargo-minimist-demo"
+  name: "embargo-{slug}"
   description: One coordinated disclosure of the minimist prototype-pollution bug (CVE-2020-7598 / CVE-2021-44906), run from report to public advisory.
   bridge: "{bridge}"
   agents: ["embargo-timekeeper", "embargo-repro", "embargo-advisory"]
