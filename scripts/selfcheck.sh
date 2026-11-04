@@ -32,6 +32,10 @@ rm -f "$tmp"
 echo "== Layer C: emit public advisory =="
 node publish/emit-advisory.js record/embargo-minimist-demo.record.json --outdir "$(mktemp -d)" >/dev/null 2>&1 && ok "emit OSV / CVE 5.0 / advisory / checklist" || no "Layer C emit failed"
 
+echo "== Layer D: agent work attestation =="
+node assure/verify-work.js >/dev/null 2>&1 && ok "attestation chain intact" || no "attestation chain broken"
+node assure/verify-work.js --against record/embargo-minimist-demo.record.json >/dev/null 2>&1 && ok "room verdicts backed by attested runs" || no "a claimed verdict is unbacked"
+
 echo "== Embargo clock =="
 node clock/clock.js init --scale 30 >/dev/null 2>&1 && node clock/clock.js status >/dev/null 2>&1 && ok "clock init + status" || no "clock failed"
 

@@ -33,16 +33,25 @@ function dockerCmd(cmd) {
   return { status: r.status, out: (r.stdout || '') + (r.stderr || '') };
 }
 
-// ---- OSV: is <pkg>@<version> affected by <cve>? ----
+// ---- OSV: is <pkg>@<version> affected by <cve>? (retries transient errors) ----
 async function osvAffectedBy(pkg, version, cve) {
-  const res = await fetch('https://api.osv.dev/v1/query', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ version, package: { name: pkg, ecosystem: 'npm' } }),
-  });
-  if (!res.ok) throw new Error('OSV HTTP ' + res.status);
-  const d = await res.json();
-  return (d.vulns || []).some((v) => (v.aliases || []).includes(cve) || v.id === cve);
+  let last;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const res = await fetch('https://api.osv.dev/v1/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ version, package: { name: pkg, ecosystem: 'npm' } }),
+      });
+      if (!res.ok) throw new Error('OSV HTTP ' + res.status);
+      const d = await res.json();
+      return (d.vulns || []).some((v) => (v.aliases || []).includes(cve) || v.id === cve);
+    } catch (e) {
+      last = e;
+      if (attempt < 3) await new Promise((r) => setTimeout(r, 400 * attempt));
+    }
+  }
+  throw last;
 }
 
 async function runCase(file) {

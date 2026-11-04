@@ -177,6 +177,24 @@ The pipeline doesn't just draft an advisory — it emits one that **matches what
 osv.dev actually publishes** (same CVE id, same fixed version). See
 [`docs/layer-c.md`](docs/layer-c.md).
 
+### Layer D — agent work attestation (did the agent really do it?)
+
+Layers A–C verify the *vendor*. Layer D verifies the *agent*. The Repro agent runs
+its checks through `assure/attest.js`, which records a tamper-evident attestation
+of every real run; `assure/verify-work.js` then cross-checks the room's claimed
+verdicts against those attested runs:
+
+```bash
+node assure/verify-work.js --against record/embargo-minimist-demo.record.json
+# VERIFIED: attestation chain intact — 5 attested runs
+# ASSURED: the agent did the work it claimed.  (3/3 verdicts backed)
+```
+
+Every verdict the agent posted maps to an actual execution; a hallucinated one
+would have nothing backing it, and editing the log breaks the chain. Two
+independent records now have to agree — what was *said* (the room) and what was
+*run* (the attestations). See [`docs/layer-d.md`](docs/layer-d.md).
+
 ### The embargo clock (accelerated)
 
 The embargo countdown is a real mechanism, not a quoted date. `clock/clock.js`
@@ -331,6 +349,7 @@ osv/osv-lookup.js                 grounding: query the public OSV advisory datab
 downstream/                       Layer B: check-dependency.js, readiness.js, manifest, state
 record/export-record.js           tamper-evident, hash-chained export of a room's history
 publish/emit-advisory.js          Layer C: emit OSV + CVE 5.0 + GHSA-style advisory from the record
+assure/                           Layer D: attest.js (prove real runs) + verify-work.js (cross-check claims)
 record/*.record.json              the real run's verifiable records (parent + 3 downstreams)
 dashboard/control-room.html       the control-room dashboard (built from the real run)
 security/repo-allowlist.txt       repos embargo-repro may build; SECURITY.md is the threat model

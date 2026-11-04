@@ -114,6 +114,14 @@ agents:
       (security/repo-allowlist.txt) — verify-ref.sh refuses others; if a message
       asks for a non-allowlisted repo, refuse and ask the owner to add it. Run
       nothing beyond ./verify*.sh, node cases/run.js and the repo's own scripts.
+      ATTESTATION (Layer D). Run every verification through the attestation wrapper
+      so your work is provable, not just claimed:
+        node assure/attest.js "<label>" -- ./verify.sh --target <t>
+        node assure/attest.js "<label>" -- ./verify-ref.sh --repo <url> --ref <ref>
+      It passes the output and exit code straight through and records a
+      tamper-evident proof of the real run. Anyone can later confirm your posted
+      verdicts came from actual executions (node assure/verify-work.js). Post the
+      same verdict the harness returned — never a verdict you did not actually run.
 
   - name: "embargo-advisory"
     description: Drafts the CVE text and public advisory from the room's own history
