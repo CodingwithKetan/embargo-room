@@ -29,6 +29,9 @@ tmp="$(mktemp)"; sed 's/INCOMPLETE_FIX/VERIFIED_FIXED/' record/embargo-minimist-
 node record/export-record.js verify "$tmp" >/dev/null 2>&1 && no "tamper NOT caught" || ok "tamper is caught (chain breaks)"
 rm -f "$tmp"
 
+echo "== Layer C: emit public advisory =="
+node publish/emit-advisory.js record/embargo-minimist-demo.record.json --outdir "$(mktemp -d)" >/dev/null 2>&1 && ok "emit OSV / CVE 5.0 / advisory / checklist" || no "Layer C emit failed"
+
 echo "== Embargo clock =="
 node clock/clock.js init --scale 30 >/dev/null 2>&1 && node clock/clock.js status >/dev/null 2>&1 && ok "clock init + status" || no "clock failed"
 
@@ -41,6 +44,10 @@ if node osv/osv-lookup.js minimist >/dev/null 2>&1; then ok "OSV lookup (osv.dev
 echo "== Optional: auto-mode watch (needs network) =="
 node watch/watch.js --json >/dev/null 2>&1; rc=$?
 if [ $rc -eq 0 ] || [ $rc -eq 10 ]; then ok "watch checkup runs (exit $rc)"; else sk "watch checkup — no network"; fi
+
+echo "== Optional: Layer C validates vs OSV (needs network) =="
+node publish/emit-advisory.js --validate record/embargo-minimist-demo.record.json >/dev/null 2>&1; rc=$?
+if [ $rc -eq 0 ]; then ok "emitted advisory matches OSV"; elif [ $rc -eq 2 ]; then sk "Layer C validate — no network"; else no "Layer C validate: mismatch"; fi
 
 echo "== Optional: case framework (needs Docker + network) =="
 if docker info >/dev/null 2>&1 || sg docker -c "docker info" >/dev/null 2>&1; then

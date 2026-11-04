@@ -159,6 +159,24 @@ node downstream/readiness.js downstream/state.example.json
 `readiness.js` is READY when every downstream is resolved, or the deadline has
 passed; otherwise HOLD, naming who we're waiting on. See `docs/layer-b.md`.
 
+### Layer C — coordinated public disclosure
+
+When the case reaches PUBLISHED, Layer C turns the room's verified record into the
+standard formats the ecosystem actually consumes — **OSV schema**, **CVE Record
+Format 5.0**, a **GHSA-style** writeup, and a publication checklist that routes
+notifications to the Layer B downstreams. Each carries the record's head hash as
+provenance.
+
+```bash
+node publish/emit-advisory.js record/embargo-minimist-demo.record.json --state downstream/state.example.json
+node publish/emit-advisory.js --validate record/embargo-minimist-demo.record.json
+# VALIDATED: our emitted advisory matches the authoritative OSV record.
+```
+
+The pipeline doesn't just draft an advisory — it emits one that **matches what
+osv.dev actually publishes** (same CVE id, same fixed version). See
+[`docs/layer-c.md`](docs/layer-c.md).
+
 ### The embargo clock (accelerated)
 
 The embargo countdown is a real mechanism, not a quoted date. `clock/clock.js`
@@ -312,6 +330,7 @@ clock/clock.js                    scalable embargo clock (CLOCK_SCALE) + silence
 osv/osv-lookup.js                 grounding: query the public OSV advisory database
 downstream/                       Layer B: check-dependency.js, readiness.js, manifest, state
 record/export-record.js           tamper-evident, hash-chained export of a room's history
+publish/emit-advisory.js          Layer C: emit OSV + CVE 5.0 + GHSA-style advisory from the record
 record/*.record.json              the real run's verifiable records (parent + 3 downstreams)
 dashboard/control-room.html       the control-room dashboard (built from the real run)
 security/repo-allowlist.txt       repos embargo-repro may build; SECURITY.md is the threat model

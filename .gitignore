@@ -4,3 +4,4 @@ node_modules/
 clock/embargo-clock.json
 downstream/state.json
 watch/seen.json
+publish/out/

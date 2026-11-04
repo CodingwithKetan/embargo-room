@@ -16,6 +16,8 @@
     "watch": "node watch/watch.js",
     "readiness": "node downstream/readiness.js downstream/state.example.json",
     "record:verify": "node record/export-record.js verify record/embargo-minimist-demo.record.json",
+    "emit": "node publish/emit-advisory.js record/embargo-minimist-demo.record.json --state downstream/state.example.json",
+    "emit:validate": "node publish/emit-advisory.js --validate record/embargo-minimist-demo.record.json",
     "clock:demo": "node clock/clock.js init --scale 30 && node clock/clock.js notify && node clock/clock.js status"
   }
 }
