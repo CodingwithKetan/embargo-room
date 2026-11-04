@@ -102,10 +102,37 @@ passed; otherwise HOLD, naming who we're waiting on. See `docs/layer-b.md`.
 ### 2. Run the full room
 
 1. Install Switch Console + Docker; run the Switch quickstart.
-2. Load `embargo-room.template.yaml` in Console (fill the `{...}` placeholders).
+2. Load `embargo-room.template.yaml` in Console (provider = `claude`; Console
+   prompts for the machine, the bundled Mattermost, and the vendor handle).
 3. Paste `demo/seed-report.md` into the room as the researcher.
 4. Watch the agents work through the state machine, including the
    `INCOMPLETE_FIX` loop, up to the human sign-off gate.
+
+## Proven end-to-end (live run)
+
+This isn't a mockup. The full disclosure was run live in a Switch room — two
+humans (researcher + vendor) and the three agents — and walked the **entire**
+state machine to a published advisory. Every verdict came from an agent building
+a **real vendor commit in Docker** and running the PoC against it, with no network:
+
+```
+REPORTED → REPRODUCED → VENDOR_NOTIFIED → PATCH_SUBMITTED
+  → INCOMPLETE_FIX    (v1.2.5 built from source — still TRIGGERED)
+  → PATCH_SUBMITTED → VERIFIED_FIXED    (v1.2.6 built from source — SAFE)
+  → ADVISORY_DRAFTED → SIGNED_OFF → PUBLISHED
+```
+
+- **embargo-repro** confirmed 1.2.0 TRIGGERED, caught `v1.2.5` as still TRIGGERED
+  (the incomplete fix), then verified `v1.2.6` SAFE — trusting only its own runs.
+- **embargo-timekeeper** held the 90-day embargo clock, logged every transition,
+  ran the Layer B dependency checks, and gated PUBLISHED on `readiness.js`.
+- **embargo-advisory** drafted **CVE-2021-44906** (affected ≤ 1.2.5, fixed 1.2.6,
+  CVSS 5.6) — and when told to publish, *dropped wording that hadn't been signed
+  off*, refusing to put unapproved text in the public record.
+- The three agents together proved a downstream (`optimist`) was genuinely
+  exposed, by building `minimist@0.0.10` and running the PoC against it.
+
+The room's message history **is** the disclosure's audit trail.
 
 ## Built during the hackathon
 

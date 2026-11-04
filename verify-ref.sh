@@ -3,6 +3,16 @@
 # Builds the vendor's candidate from source in Docker and runs the PoC offline.
 # Exit 0 = TRIGGERED, 1 = SAFE, 2 = error.
 set -euo pipefail
+
+# See verify.sh: re-exec under `sg docker` if the docker group isn't active in
+# this shell but the user is a docker-group member (common for Switch agents),
+# so plain `./verify-ref.sh` works without the caller needing `sg`/`newgrp`.
+if [ -z "${EMBARGO_DOCKER_SG:-}" ] && ! docker info >/dev/null 2>&1; then
+  if command -v sg >/dev/null 2>&1 && id -nG 2>/dev/null | tr ' ' '\n' | grep -qx docker; then
+    exec sg docker -c "EMBARGO_DOCKER_SG=1 $(printf '%q ' "$0" "$@")"
+  fi
+fi
+
 REPO=""; REF=""
 while [[ $# -gt 0 ]]; do case "$1" in
   --repo) REPO="$2"; shift 2;;

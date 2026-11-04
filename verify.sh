@@ -5,6 +5,17 @@
 # network, and reports the verdict. Exit 0 = TRIGGERED, 1 = SAFE, 2 = error.
 set -euo pipefail
 
+# Robustness: a Switch agent often runs in a shell where the docker group isn't
+# active yet (fresh group membership needs a re-login), so `docker` fails with a
+# permission error. If the socket isn't reachable but the user IS in the docker
+# group, re-exec under `sg docker` so plain `./verify.sh` works without the
+# caller needing `sg`/`newgrp`.
+if [ -z "${EMBARGO_DOCKER_SG:-}" ] && ! docker info >/dev/null 2>&1; then
+  if command -v sg >/dev/null 2>&1 && id -nG 2>/dev/null | tr ' ' '\n' | grep -qx docker; then
+    exec sg docker -c "EMBARGO_DOCKER_SG=1 $(printf '%q ' "$0" "$@")"
+  fi
+fi
+
 TARGET="vulnerable"
 while [[ $# -gt 0 ]]; do
   case "$1" in
