@@ -38,6 +38,10 @@ echo "== Security: repo allowlist guard =="
 echo "== Optional: OSV grounding (needs network) =="
 if node osv/osv-lookup.js minimist >/dev/null 2>&1; then ok "OSV lookup (osv.dev reachable)"; else sk "OSV lookup — no network"; fi
 
+echo "== Optional: auto-mode watch (needs network) =="
+node watch/watch.js --json >/dev/null 2>&1; rc=$?
+if [ $rc -eq 0 ] || [ $rc -eq 10 ]; then ok "watch checkup runs (exit $rc)"; else sk "watch checkup — no network"; fi
+
 echo "== Optional: case framework (needs Docker + network) =="
 if docker info >/dev/null 2>&1 || sg docker -c "docker info" >/dev/null 2>&1; then
   node cases/run.js cases/minimist-cve-2021-44906.json >/dev/null 2>&1 && ok "case framework: verdicts agree with OSV" || no "case run failed"

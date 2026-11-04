@@ -3,3 +3,4 @@ node_modules/
 .DS_Store
 clock/embargo-clock.json
 downstream/state.json
+watch/seen.json

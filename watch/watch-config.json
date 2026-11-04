@@ -1,0 +1,22 @@
+{
+  "_doc": "Auto-mode policy for the embargo-watch agent. THIS FILE IS HOW A HUMAN CONFIGURES THE AGENTS' ACCESS: what they monitor, and what they may do on their own vs. only after a human approves. Edit it, commit it; changes are auditable. See docs/watch-mode.md.",
+  "ecosystem": "npm",
+  "watchlist": [
+    "minimist",
+    "rc",
+    "subarg",
+    "optimist"
+  ],
+  "policy": {
+    "on_new_cve": "propose",
+    "min_cvss": 0.0,
+    "require_human_to_open_room": true,
+    "require_human_to_build": true,
+    "_options": {
+      "on_new_cve": "propose = report + ask a human (default) | auto-triage = also open a room automatically (still bounded by the require_* gates) | off = watch disabled",
+      "min_cvss": "only surface advisories at or above this CVSS base score when OSV provides one; 0 = surface all",
+      "require_human_to_open_room": "true = a human must approve before any disclosure room is opened",
+      "require_human_to_build": "true = embargo-repro must get approval before it builds/runs any repo"
+    }
+  }
+}

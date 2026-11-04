@@ -13,6 +13,7 @@
     "verify:local": "./verify-local.sh --target vulnerable; ./verify-local.sh --target bad-patch; ./verify-local.sh --target patched",
     "cases": "node cases/run.js cases/minimist-cve-2021-44906.json cases/minimist-cve-2020-7598.json",
     "osv": "node osv/osv-lookup.js minimist",
+    "watch": "node watch/watch.js",
     "readiness": "node downstream/readiness.js downstream/state.example.json",
     "record:verify": "node record/export-record.js verify record/embargo-minimist-demo.record.json",
     "clock:demo": "node clock/clock.js init --scale 30 && node clock/clock.js notify && node clock/clock.js status"

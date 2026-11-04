@@ -251,6 +251,25 @@ REPORTED → REPRODUCED → VENDOR_NOTIFIED → PATCH_SUBMITTED
 
 The room's message history **is** the disclosure's audit trail.
 
+## Auto mode — watch for new CVEs (human-gated)
+
+Beyond running one disclosure, Embargo Room can **watch**. The `embargo-watch`
+agent runs a regular checkup against the public OSV database for a configured
+watchlist of your dependencies and **proposes** disclosures — then waits for a
+human. Autonomous discovery, human-gated action.
+
+```bash
+node watch/watch.js          # checkup: new advisories on the watchlist (grounded in osv.dev)
+```
+
+A real checkup on the sample watchlist surfaces, among others, minimist's two
+CVEs and a live `rc` advisory — each marked **AWAITING HUMAN APPROVAL**. What the
+agent may do on its own is set by a human in `watch/watch-config.json` (the
+watchlist, a severity floor, and whether opening a room or building a repo needs
+approval — all gated by default), so a human configures the agents' access. On
+approval, the normal disclosure flow opens. Full design:
+[`docs/watch-mode.md`](docs/watch-mode.md).
+
 ## Securing the agents (the tool itself)
 
 These agents act on chat messages and one of them builds and runs code, so the
@@ -282,6 +301,8 @@ during the event. `minimist`, the CVEs and Switch itself are off-the-shelf.
 ```
 embargo-room.template.yaml        Switch: the 3 agents + parent room
 embargo-downstream.template.yaml  Switch: a Layer B child room (attaches shared agents)
+embargo-intake.template.yaml      Switch: auto-mode intake room (embargo-watch)
+watch/                            auto mode: watch.js checkup + watch-config.json policy
 poc/poc.js                        the proof of concept (CVE-2021-44906 vector)
 verify.sh / verify-local.sh       core harness, pinned versions (Docker / local)
 verify-ref.sh / -local.sh         Layer A: build a vendor's real git ref from source
