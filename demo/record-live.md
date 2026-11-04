@@ -1,0 +1,43 @@
+# Recording run-of-show — walk the real, completed run
+
+This records the demo from the **already-completed** live room
+`embargo-minimist-live` plus the terminal beats. Nothing needs to be created or
+driven live: the room is fully populated, so it records cleanly even if the
+agents go idle. Target ~3:00–3:15, one continuous take.
+
+## Three screens to cut between
+
+- **A — Mattermost**, room `embargo-minimist-live` (2 humans + 3 agents, the full arc).
+- **B — the dashboard**, `dashboard/control-room.html`, open full-screen.
+- **C — a terminal** at the repo root, running `demo/terminal-beats.sh` (one keystroke per beat).
+
+## Run-of-show
+
+| # | Time | Screen | What's on screen | Voiceover (short) |
+| --- | --- | --- | --- | --- |
+| 1 | 0:00 | B → A | Dashboard title + state machine, then the room header | "Coordinated disclosure is a trust-and-timing problem between parties who don't trust each other — and the fix often doesn't fix. This runs the whole thing in one Switch room: two humans, three agents." |
+| 2 | 0:25 | A | Scroll: researcher **report** → **REPRODUCED** (repro ran `verify.sh`, minimist 1.2.0 → TRIGGERED) | "The agent's own Docker run is the evidence — never the vendor's word." |
+| 3 | 0:55 | A | Scroll to **INCOMPLETE_FIX**: repro built `minimistjs/minimist @ v1.2.5` *from source* → still vulnerable. **Hold 2s.** | "The vendor ships the fix. The agent builds their actual commit — and it still triggers. The timekeeper refuses to advance; the clock keeps running." |
+| 4 | 1:25 | A | Scroll: **VERIFIED_FIXED** (`v1.2.6` safe) → Layer B readiness **READY** → **SIGNED_OFF → PUBLISHED 🏁** | "The real fix. Two independent sources agree. Both humans sign off — nobody publishes alone." |
+| 5 | 1:55 | C | `npm run redteam` → **5/5 BLOCKED** | "Agents that run code are a target, so the tool defends itself: hostile repo, malicious dependency, backdoor callback, 'publish anyway' injection, faked verdict — all blocked." |
+| 6 | 2:20 | C | record `verify` (intact) → tamper one word (**breaks at entry 27**) → `npm run assure` (**3/3 backed**) | "Nobody can quietly rewrite 'the fix didn't work' — the record is hash-chained, and every verdict is backed by a tamper-evident attested run." |
+| 7 | 2:45 | C | `npm run emit:validate` (**VALIDATED vs OSV**) → `npm test` (**17/17**) | "It emits the real public advisory — OSV, CVE 5.0, GHSA — validated against osv.dev, and the whole thing reproduces from a clean clone." |
+| 8 | 3:00 | C → B | `node bridge/status.js --down slack` → fails over to Mattermost, record head unchanged; end on the dashboard | "It runs on whatever chat app your team uses. A bridge outage doesn't stall the disclosure — the truth is the portable record, not the platform." |
+
+Never cut: the **INCOMPLETE_FIX** beat (#3) or the **prevent-hack** beat (#5).
+
+## The terminal beats
+
+Run `bash demo/terminal-beats.sh` in screen C. It pauses before each beat so you
+press a key on cue; output is the real thing (already dry-run green). See the
+file for the exact commands.
+
+## Key posts to land on in the room (for scrolling)
+
+- **REPRODUCED** — `embargo-repro`: "REPRODUCED: minimist 1.2.0, prototype pollution via the constructor chain."
+- **INCOMPLETE_FIX** — `embargo-repro`: "INCOMPLETE_FIX: minimistjs/minimist @ v1.2.5 is still vulnerable." → timekeeper: "Patch verification FAILED — incomplete fix."
+- **VERIFIED_FIXED** — `embargo-repro`: "VERIFIED_FIXED: minimistjs/minimist @ v1.2.6 is safe against the PoC."
+- **PUBLISHED** — `embargo-timekeeper`: "SIGNED_OFF → PUBLISHED 🏁".
+
+(The trailing "reconcile the record honestly" exchange after PUBLISHED is a nice
+honesty beat but optional — stop scrolling at PUBLISHED if trimming to 3:00.)
