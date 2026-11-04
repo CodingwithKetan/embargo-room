@@ -1,0 +1,115 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Embargo Room Overview</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  /* One-screen "how it works": the room at the centre, the A→B→C→D pipeline
+     beneath it, and the two-sided trust model. Palette matches the control room. */
+  :root {
+    --bg:#eef0f4; --surface:#fff; --surface-2:#f5f6f9; --fg:#191c23; --muted:#5a6471; --faint:#8a94a3;
+    --border:#e0e4ea; --border-strong:#cdd3dd; --accent:#3b5bdb; --accent-soft:#e7ebfb;
+    --human:#3b5bdb; --human-soft:#e7ebfb; --agent:#2b8a3e; --agent-soft:#e4f3e7;
+    --a:#3b5bdb; --b:#0d9488; --c:#b8860b; --d:#9333ea;
+    --shadow:0 1px 2px rgba(20,26,40,.05),0 2px 12px rgba(20,26,40,.05);
+    --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace; --sans:"IBM Plex Sans",system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#0d1016;--surface:#151a22;--surface-2:#1b212b;--fg:#e7ebf2;--muted:#9aa4b3;--faint:#6b7686;
+    --border:#242b36;--border-strong:#333c49;--accent:#8ea2ff;--accent-soft:#1c2440;
+    --human:#8ea2ff;--human-soft:#1c2440;--agent:#5bc46b;--agent-soft:#15291a;
+    --a:#8ea2ff;--b:#2dd4bf;--c:#e3b341;--d:#c084fc;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 2px 14px rgba(0,0,0,.3);color-scheme:dark;}}
+  :root[data-theme="dark"]{
+    --bg:#0d1016;--surface:#151a22;--surface-2:#1b212b;--fg:#e7ebf2;--muted:#9aa4b3;--faint:#6b7686;
+    --border:#242b36;--border-strong:#333c49;--accent:#8ea2ff;--accent-soft:#1c2440;
+    --human:#8ea2ff;--human-soft:#1c2440;--agent:#5bc46b;--agent-soft:#15291a;
+    --a:#8ea2ff;--b:#2dd4bf;--c:#e3b341;--d:#c084fc;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 2px 14px rgba(0,0,0,.3);color-scheme:dark;}
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.5}
+  .wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:34px 56px}
+  h1,h2{margin:0;line-height:1.15;text-wrap:balance}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  h1{font-size:30px;font-weight:700;letter-spacing:-.02em;margin-top:8px}
+  .lede{color:var(--muted);font-size:15px;max-width:64ch;margin-top:10px}
+  .mono{font-family:var(--mono)}
+
+  /* the room */
+  .room{margin-top:28px;border:1.5px solid var(--border-strong);border-radius:16px;background:var(--surface);box-shadow:var(--shadow);overflow:hidden}
+  .room-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 18px;border-bottom:1px solid var(--border);background:var(--surface-2);flex-wrap:wrap}
+  .room-top .nm{font-family:var(--mono);font-weight:600;font-size:14px;display:flex;align-items:center;gap:9px}
+  .room-top .nm::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--agent)}
+  .room-top .tag{font-size:12px;color:var(--muted)}
+  .room-body{padding:18px}
+  .lane{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:600;margin:2px 0 9px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .card{border:1px solid var(--border);border-radius:11px;padding:12px 13px;background:var(--surface-2)}
+  .card .h{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .card .who{font-family:var(--mono);font-weight:600;font-size:12.5px}
+  .card .role{font-size:11.5px;color:var(--muted);margin-top:6px}
+  .chip{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:999px}
+  .chip.h{color:var(--human);background:var(--human-soft)} .chip.a{color:var(--agent);background:var(--agent-soft)}
+  .divider{height:1px;background:var(--border);margin:16px 0}
+  .shared{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--fg);background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);border-radius:10px;padding:10px 13px}
+  .shared b{color:var(--accent)}
+
+  /* pipeline A B C D */
+  .pipe{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}
+  .stage{border:1px solid var(--border);border-top:3px solid var(--st);border-radius:12px;background:var(--surface);box-shadow:var(--shadow);padding:14px 14px}
+  .stage .lab{font-family:var(--mono);font-weight:600;font-size:13px;color:var(--st);display:flex;align-items:center;gap:8px}
+  .stage .lab .l{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;background:var(--st);color:#fff;font-size:12px;font-weight:700}
+  .stage .t{font-weight:600;font-size:13px;margin-top:9px}
+  .stage .d{font-size:11.5px;color:var(--muted);margin-top:5px}
+  .s-a{--st:var(--a)} .s-b{--st:var(--b)} .s-c{--st:var(--c)} .s-d{--st:var(--d)}
+
+  /* trust model */
+  .trust{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+  .tcol{border:1px solid var(--border);border-radius:12px;background:var(--surface);box-shadow:var(--shadow);padding:15px 16px}
+  .tcol h2{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+  .tcol p{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+  .tcol .q{font-family:var(--mono);font-size:12px;color:var(--fg);margin-top:9px;padding-left:10px;border-left:2px solid var(--accent)}
+
+  footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--border);font-size:13px;color:var(--muted)}
+  footer b{color:var(--fg)}
+  @media (max-width:720px){.pipe{grid-template-columns:1fr 1fr}.trust{grid-template-columns:1fr}h1{font-size:24px}}
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">Coordinated vulnerability disclosure</div>
+  <h1>Embargo Room</h1>
+  <p class="lede">One Switch room runs a disclosure from report to published advisory. Agents verify and keep the clock; humans hold the two decisions that must stay human. Remove the shared room and it's disconnected bots and separate inboxes.</p>
+
+  <section class="room" aria-label="the room">
+    <div class="room-top"><span class="nm">one Switch room</span><span class="tag">two humans · three agents · one shared, verifiable record</span></div>
+    <div class="room-body">
+      <div class="lane">The two decisions that stay human</div>
+      <div class="cards">
+        <div class="card"><div class="h"><span class="who">researcher</span><span class="chip h">human</span></div><div class="role">Files the report; holds <b>go-to-publish</b>.</div></div>
+        <div class="card"><div class="h"><span class="who">vendor</span><span class="chip h">human</span></div><div class="role">Ships patches; holds <b>sign-off</b>.</div></div>
+      </div>
+      <div class="divider"></div>
+      <div class="lane">The agents — gather evidence, hold the clock</div>
+      <div class="cards">
+        <div class="card"><div class="h"><span class="who">embargo-timekeeper</span><span class="chip a">agent</span></div><div class="role">Owns the clock &amp; state machine; runs downstream readiness.</div></div>
+        <div class="card"><div class="h"><span class="who">embargo-repro</span><span class="chip a">agent</span></div><div class="role">Builds the vendor's real commit in Docker; trusts only its own run.</div></div>
+        <div class="card"><div class="h"><span class="who">embargo-advisory</span><span class="chip a">agent</span></div><div class="role">Drafts the advisory from room history; grounds it in OSV.</div></div>
+      </div>
+      <div class="divider"></div>
+      <div class="shared"><span>🔗</span><span>The room's message history <b>is</b> the disclosure's tamper-evident audit record — hash-chained, and every verdict backed by an attested run.</span></div>
+    </div>
+  </section>
+
+  <div class="pipe">
+    <div class="stage s-a"><div class="lab"><span class="l">A</span> Verify the fix</div><div class="t">Build the real commit</div><div class="d">Clone the vendor's actual git ref, build from source in Docker, run the PoC offline. Catches a "fix" that doesn't fix.</div></div>
+    <div class="stage s-b"><div class="lab"><span class="l">B</span> Coordinate</div><div class="t">Downstream fan-out</div><div class="d">One child room per dependent, same timekeeper in all. Publish only when readiness is READY.</div></div>
+    <div class="stage s-c"><div class="lab"><span class="l">C</span> Publish</div><div class="t">Standard advisory</div><div class="d">Emit OSV + CVE 5.0 + a GHSA-style writeup from the record, validated against osv.dev.</div></div>
+    <div class="stage s-d"><div class="lab"><span class="l">D</span> Assure</div><div class="t">Attest the work</div><div class="d">Every agent verdict is backed by a tamper-evident proof of the real run. No hallucinated results.</div></div>
+  </div>
+
+  <div class="trust">
+    <div class="tcol"><h2>🛡️ Don't trust the vendor's word</h2><p>The agent builds the vendor's actual commit and re-runs the exploit — two independent sources (the build, and the OSV record) must agree.</p><div class="q">v1.2.5 "fixed" → built from source → still TRIGGERED</div></div>
+    <div class="tcol"><h2>🔍 Don't trust the agent's word either</h2><p>Every verdict the agent posts maps to an attested, tamper-evident execution. If an agent hallucinated a result, nothing would back it.</p><div class="q">3 / 3 verdicts backed by attested runs → ASSURED</div></div>
+  </div>
+
+  <footer><b>Switch is the mechanism.</b> Mutually distrusting parties share exactly one timeline and one set of evidence, while agents act on that same shared state. That is a Switch room — and nothing else is.</footer>
+</div>
