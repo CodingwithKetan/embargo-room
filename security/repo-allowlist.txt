@@ -1,0 +1,11 @@
+# Repositories embargo-repro is permitted to clone and build.
+#
+# verify-ref.sh and verify-ref-local.sh REFUSE any --repo not listed here, so a
+# compromised room (hacked Slack/Mattermost, a taken-over account, a malicious
+# message) cannot make an agent clone and build hostile code on the host.
+#
+# One repo URL per line. A trailing ".git" and trailing slashes are ignored.
+# Lines starting with # are comments. Adding a line is an auditable, human
+# action: add the vendor's real repository when a disclosure needs it.
+
+https://github.com/minimistjs/minimist

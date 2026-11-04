@@ -33,9 +33,9 @@ fi
 echo ">>> building ${TARGET} ..." >&2
 docker build -q -f "$DF" -t "embargo-${TARGET}" . >/dev/null
 
-echo ">>> running PoC (no network) ..." >&2
+echo ">>> running PoC (no network, dropped caps) ..." >&2
 set +e
-OUT="$(docker run --rm --network none "embargo-${TARGET}")"
+OUT="$(docker run --rm --network none --cap-drop ALL --security-opt no-new-privileges --pids-limit 256 --memory 512m "embargo-${TARGET}")"
 CODE=$?
 set -e
 

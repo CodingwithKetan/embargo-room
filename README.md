@@ -217,6 +217,26 @@ REPORTED → REPRODUCED → VENDOR_NOTIFIED → PATCH_SUBMITTED
 
 The room's message history **is** the disclosure's audit trail.
 
+## Securing the agents (the tool itself)
+
+These agents act on chat messages and one of them builds and runs code, so the
+room is an attack surface. If someone compromises your Slack/Mattermost, the hard
+controls still hold:
+
+- **Repo allowlist** — `embargo-repro` refuses to build any repo not in
+  `security/repo-allowlist.txt`, so a hacked room can't make it run hostile code
+  (verified: a non-allowlisted repo is refused *before* any clone).
+- **Sandboxed build + run** — dependencies install with `--ignore-scripts`; the
+  PoC runs with `--network none`, `--cap-drop ALL`, no-new-privileges, and
+  pid/memory limits.
+- **Untrusted input** — agents treat every message as data, not instructions
+  (prompt-injection resistance), and run only fixed repo scripts.
+- **Human-only gates** — sign-off and go-to-publish require humans; a compromised
+  agent cannot publish or sign off.
+- **Tamper-evident record** — any edited entry breaks the hash chain.
+
+Full threat model, residual risks and a deployment checklist: [`SECURITY.md`](SECURITY.md).
+
 ## Built during the hackathon
 
 The Switch room setup, the three agents' instructions, the verification harness
