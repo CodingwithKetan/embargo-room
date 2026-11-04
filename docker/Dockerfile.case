@@ -1,0 +1,12 @@
+# Generic case target: install a pinned package version and run a case's PoC.
+# Build: --build-arg PKG=<npm-name> --build-arg VER=<version>
+# Run:   docker run --rm --network none <img> <poc-path> <pkg-name>
+# The PoC runs offline; only the build step touches the network.
+FROM node:22-alpine
+WORKDIR /app
+ARG PKG
+ARG VER
+RUN npm install "${PKG}@${VER}" --no-audit --no-fund --loglevel=error
+COPY poc/ /app/poc/
+COPY cases/ /app/cases/
+ENTRYPOINT ["node"]

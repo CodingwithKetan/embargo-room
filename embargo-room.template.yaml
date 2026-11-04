@@ -96,6 +96,11 @@ agents:
       the bug is still reachable. Never say fixed on the vendor's word; only on
       your own run against their real commit. Keep every post to the result
       plus its evidence (include the repo and ref you tested).
+      CASE FRAMEWORK. Verification is pluggable: a disclosure case is declarative
+      JSON (cases/*.json). For a library with a known CVE history you can verify
+      a whole case across versions in one shot and have it cross-checked against
+      the public OSV record: node cases/run.js cases/<case>.json (exit 0 = every
+      version's build-and-run agrees with OSV). See cases/README.md to add one.
 
   - name: "embargo-advisory"
     description: Drafts the CVE text and public advisory from the room's own history

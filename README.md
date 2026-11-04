@@ -69,6 +69,28 @@ The 1.2.5 "fix" guarded `__proto__` and the Object/Number/String/Array
 prototypes but missed `Function.prototype`, so the bug is still reachable — the
 exact gap the Repro agent catches in the demo.
 
+### A framework, not a one-off — any CVE is a case
+
+The harness isn't hardcoded to one bug. A disclosure *case* is declarative — a
+small JSON naming the package, the PoC, the versions to test, and the authoritative
+OSV advisory — so a new vulnerability plugs in as data, not code. The repo ships
+two **real, independent** minimist CVEs with different vectors and different fix
+points, and the runner proves each verdict against OSV, per version:
+
+```bash
+node cases/run.js cases/minimist-cve-2021-44906.json cases/minimist-cve-2020-7598.json
+```
+
+```
+CVE-2021-44906 (Function.prototype):  1.2.0 TRIGGERED · 1.2.5 TRIGGERED · 1.2.6 SAFE
+CVE-2020-7598  (Object.prototype):    1.2.0 TRIGGERED · 1.2.3 SAFE      · 1.2.6 SAFE
+```
+
+Every row agrees three ways: the Docker build-and-run, the OSV record, and the
+case's expected value. Note **1.2.5** — `CVE-2021-44906` is live while
+`CVE-2020-7598` is already fixed: proof the two are distinct bugs, not one
+restated. See `cases/README.md` to add your own.
+
 ### Layer A — verify a real patch from a git ref
 
 Instead of only pre-pinned versions, the Repro agent verifies the vendor's
