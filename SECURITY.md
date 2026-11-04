@@ -80,6 +80,15 @@ A report or patch note could contain *"ignore your instructions and …"*.
 - **Prompt injection is mitigated, not eliminated.** The human gates and the
   allowlist are the hard controls behind the soft instruction-level defenses.
 
+## See the controls hold (red-team)
+
+`npm run redteam` (or `security/redteam/redteam.sh`) runs five realistic attacks
+from a compromised room and shows each is blocked: a hostile repo (allowlist), a
+malicious dependency install script (`--ignore-scripts`, with a harmless canary
+proving the baseline), a backdoor phoning home (`--network none`), a "publish
+anyway" injection (untrusted-data + human gates), and a faked verdict (Layer D
+attestation). Result: `ALL ATTACKS BLOCKED`.
+
 ## Deployment hardening checklist
 
 - [ ] Enforce SSO / 2FA on Slack / Mattermost; restrict room membership.

@@ -1,0 +1,9 @@
+{
+  "name": "embargo-redteam-canary",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A HARMLESS supply-chain canary. Its install script only writes a marker file, so a test can tell whether install scripts ran. It exists to PROVE that --ignore-scripts neutralizes the install-script attack vector. It is not malware and does nothing hostile.",
+  "scripts": {
+    "postinstall": "node -e \"require('fs').writeFileSync(process.env.CANARY_MARKER || 'canary-marker.txt', 'install-script-ran')\""
+  }
+}

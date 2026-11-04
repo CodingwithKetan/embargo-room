@@ -324,7 +324,10 @@ controls still hold:
   agent cannot publish or sign off.
 - **Tamper-evident record** — any edited entry breaks the hash chain.
 
-Full threat model, residual risks and a deployment checklist: [`SECURITY.md`](SECURITY.md).
+**See it hold:** `npm run redteam` runs five realistic attacks — hostile repo,
+malicious dependency install script, a backdoor phoning home, a "publish anyway"
+injection, and a faked verdict — and shows each **BLOCKED** (5/5). Full threat
+model, residual risks and a deployment checklist: [`SECURITY.md`](SECURITY.md).
 
 ## Built during the hackathon
 
