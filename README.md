@@ -50,6 +50,26 @@ handoff flow and state machine.
 The Repro agent is told to **trust only its own run, never the vendor's claim.**
 That is the whole thesis.
 
+The state machine the Timekeeper drives, with the incomplete-fix loop that is the
+heart of the demo:
+
+```mermaid
+stateDiagram-v2
+    [*] --> REPORTED
+    REPORTED --> REPRODUCED: repro builds and runs the PoC
+    REPRODUCED --> VENDOR_NOTIFIED
+    VENDOR_NOTIFIED --> PATCH_SUBMITTED: vendor ships a fix
+    PATCH_SUBMITTED --> PATCH_SUBMITTED: INCOMPLETE_FIX — built from source, still TRIGGERED
+    PATCH_SUBMITTED --> VERIFIED_FIXED: repro builds the ref → SAFE
+    VERIFIED_FIXED --> ADVISORY_DRAFTED: grounded in OSV
+    ADVISORY_DRAFTED --> SIGNED_OFF: both humans sign off
+    SIGNED_OFF --> PUBLISHED: readiness READY + researcher go-to-publish
+    PUBLISHED --> [*]
+```
+
+Agents gather evidence and hold the clock; the two transitions into `SIGNED_OFF`
+and `PUBLISHED` are the human-only gates.
+
 ## Run it yourself
 
 ### Reproduce everything in one command (no dependencies)
