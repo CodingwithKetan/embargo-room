@@ -84,6 +84,15 @@ Never cut: the **INCOMPLETE_FIX** beat (1:05) or the **prevent-hack** beat (2:15
 
 ---
 
+## Bridge-agnostic beat (optional ~10s, after the publish close)
+
+Terminal: `node bridge/status.js` → both UP, Slack active. Then
+`node bridge/status.js --down slack` → **fails over to Mattermost, record head
+unchanged.** VO: *"It runs on whatever chat app your team uses — Slack, Mattermost,
+Teams. The disclosure's truth is the portable record, not the platform, so a bridge
+outage doesn't stall it."* (This is why recording on Mattermost is a feature, not a
+compromise.)
+
 ## B-roll / backup (for the README GIF or a longer cut)
 
 - The **control-room dashboard** panning (state machine → CVE matrix → defenses panel).
