@@ -1,0 +1,197 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Embargo Activity</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --bg:#eef0f4; --surface:#fff; --surface-2:#f5f6f9; --fg:#191c23; --muted:#5a6471; --faint:#8a94a3;
+    --border:#e0e4ea; --border-strong:#cdd3dd; --accent:#3b5bdb; --accent-soft:#e7ebfb;
+    --crit:#d13b3b; --crit-soft:#fbe6e6; --good:#2b8a3e; --good-soft:#e4f3e7; --warn:#b8860b; --warn-soft:#f6eed6;
+    --shadow:0 1px 2px rgba(20,26,40,.05),0 2px 10px rgba(20,26,40,.04);
+    --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace; --sans:"IBM Plex Sans",system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#0d1016; --surface:#151a22; --surface-2:#1b212b; --fg:#e7ebf2; --muted:#9aa4b3; --faint:#6b7686;
+    --border:#242b36; --border-strong:#333c49; --accent:#8ea2ff; --accent-soft:#1c2440;
+    --crit:#ff6b6b; --crit-soft:#35191b; --good:#5bc46b; --good-soft:#15291a; --warn:#e3b341; --warn-soft:#2e2510;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 2px 12px rgba(0,0,0,.28); color-scheme:dark;}}
+  :root[data-theme="dark"]{
+    --bg:#0d1016; --surface:#151a22; --surface-2:#1b212b; --fg:#e7ebf2; --muted:#9aa4b3; --faint:#6b7686;
+    --border:#242b36; --border-strong:#333c49; --accent:#8ea2ff; --accent-soft:#1c2440;
+    --crit:#ff6b6b; --crit-soft:#35191b; --good:#5bc46b; --good-soft:#15291a; --warn:#e3b341; --warn-soft:#2e2510;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 2px 12px rgba(0,0,0,.28); color-scheme:dark;}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.5}
+  .wrap{max-width:1240px;margin:0 auto;padding:24px 16px 64px}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  h1,h2,h3{margin:0;line-height:1.2}
+  .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);font-weight:600}
+
+  header{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:flex-end;justify-content:space-between;
+    padding-bottom:16px;border-bottom:1px solid var(--border)}
+  .title-row{display:flex;align-items:center;gap:11px}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--good);box-shadow:0 0 0 4px var(--good-soft);flex:none}
+  .dot.stale{background:var(--warn);box-shadow:0 0 0 4px var(--warn-soft)}
+  h1{font-size:23px;font-weight:700;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:13px;margin-top:3px}
+  .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  select,button{font-family:var(--mono);font-size:12px;color:var(--fg);background:var(--surface);
+    border:1px solid var(--border-strong);border-radius:8px;padding:7px 10px;cursor:pointer}
+  button:hover,select:hover{border-color:var(--accent)}
+  button[aria-pressed="true"]{color:#fff;background:var(--accent);border-color:var(--accent)}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+  .kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:13px 15px;box-shadow:var(--shadow)}
+  .kpi .v{font-family:var(--mono);font-size:23px;font-weight:600;letter-spacing:-.02em}
+  .kpi .k{font-size:12px;color:var(--muted);margin-top:2px}
+  .kpi.state .v{font-size:18px}
+  .kpi.good .v{color:var(--good)} .kpi.crit .v{color:var(--crit)}
+
+  /* failures panel */
+  .fails{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--crit);
+    border-radius:12px;box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+  .fails.none{border-left-color:var(--good)}
+  .fails .h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .fails .h h2{font-size:14px} .fails .h .note{font-size:12px;color:var(--muted)}
+  .fails ul{list-style:none;margin:0;padding:6px 0}
+  .fails li{display:grid;grid-template-columns:70px 120px 1fr;gap:10px;align-items:baseline;padding:7px 16px}
+  .fails li .t{font-family:var(--mono);font-size:11px;color:var(--faint)}
+  .fails .empty{padding:14px 16px;color:var(--good);font-size:13px}
+
+  /* agent lanes */
+  .lanes{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:14px;align-items:start}
+  .lane{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+  .lane>.h{padding:13px 15px;border-bottom:1px solid var(--border)}
+  .lane>.h .rowtop{display:flex;align-items:center;gap:9px}
+  .lane>.h .av{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;font-family:var(--mono);
+    font-weight:600;font-size:12px;color:#fff;background:var(--accent);flex:none}
+  .lane.repro .av{background:#c2410c} .lane.advisory .av{background:#7c3aed} .lane.watch .av{background:#0e7490}
+  .lane.human .av{background:var(--good)}
+  .lane>.h h3{font-size:14px} .lane>.h .blurb{font-size:11.5px;color:var(--muted)}
+  .lane>.h .cnt{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--faint)}
+  .tasks{padding:6px 0;max-height:430px;overflow:auto}
+  .task{display:grid;grid-template-columns:52px 1fr;gap:9px;padding:6px 14px;align-items:baseline}
+  .task .t{font-family:var(--mono);font-size:10.5px;color:var(--faint)}
+  .task .b{min-width:0}
+  .badge{display:inline-block;font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.03em;
+    padding:1px 6px;border-radius:5px;margin-bottom:2px;text-transform:uppercase}
+  .badge.crit{color:var(--crit);background:var(--crit-soft)} .badge.good{color:var(--good);background:var(--good-soft)}
+  .badge.warn{color:var(--warn);background:var(--warn-soft)} .badge.info{color:var(--accent);background:var(--accent-soft)}
+  .task .lab{font-size:12.5px;color:var(--fg);overflow-wrap:anywhere}
+  .task.crit .lab{color:var(--crit)}
+
+  .foot{margin-top:18px;color:var(--faint);font-size:11.5px;font-family:var(--mono);text-align:center}
+  @media (max-width:560px){.kpis{grid-template-columns:repeat(2,1fr)}.fails li{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="title-row"><span class="dot" id="dot"></span><h1>Embargo Activity</h1></div>
+      <div class="sub" id="sub">loading…</div>
+    </div>
+    <div class="controls">
+      <select id="src" title="data source"></select>
+      <button id="refresh" title="refresh now">↻ refresh</button>
+      <button id="auto" aria-pressed="false" title="auto-refresh (live)">auto</button>
+      <button id="theme" title="toggle theme">◐</button>
+    </div>
+  </header>
+
+  <div class="kpis">
+    <div class="kpi state"><div class="v" id="k-state">—</div><div class="k">current state</div></div>
+    <div class="kpi"><div class="v" id="k-tasks">—</div><div class="k">agent actions</div></div>
+    <div class="kpi crit"><div class="v" id="k-fails">—</div><div class="k">failures / flags</div></div>
+    <div class="kpi"><div class="v" id="k-states">—</div><div class="k">state transitions</div></div>
+  </div>
+
+  <div class="fails" id="fails"></div>
+  <div class="lanes" id="lanes"></div>
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  let timer = null;
+
+  function hhmm(ts){ try{ return new Date(ts).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}); }catch{ return ""; } }
+  function esc(s){ return (s||"").replace(/[&<>]/g, c=>({ "&":"&amp;","<":"&lt;",">":"&gt;" }[c])); }
+
+  async function loadSources(){
+    const s = await fetch("/api/sources").then(r=>r.json());
+    const sel = $("src"); sel.innerHTML = "";
+    if (s.live){ const o=document.createElement("option"); o.value="live"; o.textContent="● LIVE — "+s.live.room; sel.appendChild(o); }
+    for (const r of s.records){ const o=document.createElement("option"); o.value="record:"+r.id; o.textContent="record — "+r.label; sel.appendChild(o); }
+  }
+
+  function query(){
+    const v = $("src").value || "record:embargo-minimist-demo.record.json";
+    if (v === "live") return "src=live";
+    return "src=record&record=" + encodeURIComponent(v.slice("record:".length));
+  }
+
+  async function load(){
+    let m;
+    try { m = await fetch("/api/activity?"+query()).then(r=>r.json()); }
+    catch(e){ $("sub").textContent = "fetch failed: "+e; return; }
+    if (m.error){ $("sub").textContent = "error: "+m.error; return; }
+
+    $("sub").innerHTML = `${esc(m.room)} · <span class="mono">${esc(m.source)}</span>`
+      + (m.head ? ` · head <span class="mono">${esc(m.head)}…</span>` : "")
+      + ` · updated ${hhmm(m.exportedAt)}`;
+    $("dot").className = "dot" + (m.source && m.source.startsWith("live") ? "" : " stale");
+
+    const pub = /PUBLISHED/.test(m.currentState);
+    $("k-state").textContent = m.currentState;
+    $("k-state").parentElement.className = "kpi state " + (pub ? "good" : "");
+    $("k-tasks").textContent = m.counts.tasks;
+    $("k-fails").textContent = m.counts.failures;
+    $("k-states").textContent = m.counts.states;
+
+    // failures
+    const fp = $("fails");
+    if (!m.failures.length){
+      fp.className = "fails none";
+      fp.innerHTML = `<div class="h"><h2>Failures &amp; flags</h2></div><div class="empty">None — every verdict clean.</div>`;
+    } else {
+      fp.className = "fails";
+      fp.innerHTML = `<div class="h"><h2>Failures &amp; flags</h2><span class="note">${m.failures.length} caught — the process looping back is the point</span></div>`
+        + "<ul>" + m.failures.map(f=>
+          `<li><span class="t">${hhmm(f.ts)}</span><span><span class="badge ${f.sev==="crit"?"crit":"warn"}">${esc(f.status)}</span></span>`
+          + `<span>${esc(f.author)} — ${esc(f.label)}</span></li>`).join("") + "</ul>";
+    }
+
+    // lanes
+    $("lanes").innerHTML = m.lanes.map(l=>{
+      const cls = l.id.replace("embargo-","");
+      const initials = l.name.slice(0,2).toUpperCase();
+      const tasks = l.tasks.slice().reverse().map(t=>{
+        const sev = t.sev||"info";
+        return `<div class="task ${sev==="crit"?"crit":""}"><span class="t">${hhmm(t.ts)}</span>`
+          + `<span class="b">${t.status?`<span class="badge ${sev}">${esc(t.status)}</span><br>`:""}`
+          + `<span class="lab">${esc(t.label)}</span></span></div>`;
+      }).join("");
+      return `<div class="lane ${l.role==="human"?"human":cls}"><div class="h"><div class="rowtop">`
+        + `<span class="av">${initials}</span><div><h3>${esc(l.name)}</h3><div class="blurb">${esc(l.blurb||l.role)}</div></div>`
+        + `<span class="cnt">${l.tasks.length}</span></div></div><div class="tasks">${tasks}</div></div>`;
+    }).join("");
+
+    $("foot").textContent = "newest first · agent actions parsed from the room's own record · refresh for live changes";
+  }
+
+  // controls
+  $("src").addEventListener("change", load);
+  $("refresh").addEventListener("click", load);
+  $("auto").addEventListener("click", (e)=>{
+    const on = e.target.getAttribute("aria-pressed")!=="true";
+    e.target.setAttribute("aria-pressed", on?"true":"false");
+    if (on){ load(); timer = setInterval(load, 4000); } else { clearInterval(timer); timer=null; }
+  });
+  $("theme").addEventListener("click", ()=>{
+    const r=document.documentElement, cur=r.getAttribute("data-theme");
+    r.setAttribute("data-theme", cur==="dark"?"light":"dark");
+  });
+
+  (async ()=>{ await loadSources(); await load(); })();
+</script>
