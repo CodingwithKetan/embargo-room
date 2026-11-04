@@ -164,6 +164,11 @@
   .actor .role { font-size: 12px; color: var(--muted); margin-top: 7px; }
   .actor .addr { font-size: 10.5px; color: var(--faint); margin-top: 6px; font-family: var(--mono); }
 
+  .defenses { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; }
+  .def { display: flex; gap: 10px; align-items: flex-start; padding: 11px 13px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-2); }
+  .def .ck { color: var(--good); font-weight: 700; flex: none; font-family: var(--mono); }
+  .def .dt { font-weight: 600; font-size: 12.5px; }
+  .def .dd { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
   footer { margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12.5px; display: flex; flex-direction: column; gap: 6px; }
   footer b { color: var(--fg); font-weight: 600; }
   .src-foot { font-family: var(--mono); font-size: 11px; color: var(--faint); }
@@ -251,6 +256,19 @@
       </div>
     </section>
   </div>
+
+  <section class="panel span-2" style="margin-top:16px">
+    <div class="head"><h2>If the room is compromised</h2><span class="note">the hard controls still hold</span></div>
+    <div class="body">
+      <div class="defenses">
+        <div class="def"><span class="ck">✓</span><div><div class="dt">Repo allowlist</div><div class="dd">agents build only allowlisted repos — a hostile repo is refused before any clone</div></div></div>
+        <div class="def"><span class="ck">✓</span><div><div class="dt">Sandboxed run</div><div class="dd">PoC runs network-off, caps dropped, pid/memory limited; deps install with scripts off</div></div></div>
+        <div class="def"><span class="ck">✓</span><div><div class="dt">Untrusted input</div><div class="dd">messages are data, not instructions — prompt-injection resistant</div></div></div>
+        <div class="def"><span class="ck">✓</span><div><div class="dt">Human-only gates</div><div class="dd">sign-off &amp; go-to-publish need a human; a compromised agent can't publish</div></div></div>
+        <div class="def"><span class="ck">✓</span><div><div class="dt">Tamper-evident</div><div class="dd">any edited entry breaks the hash chain</div></div></div>
+      </div>
+    </div>
+  </section>
 
   <footer>
     <div><b>Remove Switch and this collapses</b> into disconnected bots and separate inboxes. The shared room is the mechanism — and its message history <b>is</b> the disclosure's audit record.</div>
