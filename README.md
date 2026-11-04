@@ -99,6 +99,27 @@ node downstream/readiness.js downstream/state.example.json
 `readiness.js` is READY when every downstream is resolved, or the deadline has
 passed; otherwise HOLD, naming who we're waiting on. See `docs/layer-b.md`.
 
+### The embargo clock (accelerated)
+
+The embargo countdown is a real mechanism, not a quoted date. `clock/clock.js`
+compresses embargo-time into real-time via `CLOCK_SCALE` (embargo-days per real
+second), so a 90-day embargo — and a silent vendor tripping an escalation — plays
+out inside a short demo:
+
+```bash
+CLOCK_SCALE=1 node clock/clock.js init   # 90-day embargo in ~90s; 14-day silence window
+node clock/clock.js notify               # vendor pinged -> silence timer starts
+node clock/clock.js status               # live countdown + flags
+# ... vendor stays quiet past the window ...
+node clock/clock.js status               # -> flag SILENCE_EXCEEDED: Timekeeper escalates
+node clock/clock.js ack                  # vendor responds -> silence cleared
+```
+
+The Timekeeper runs these as it drives the state machine (`init` on report,
+`notify` on VENDOR_NOTIFIED, `ack` on a vendor reply, `status` for every
+countdown). `SILENCE_EXCEEDED` makes it escalate; `DEADLINE_PASSED` forces the
+coordinated lift — the same backstop `readiness.js` uses.
+
 ### 2. Run the full room
 
 1. Install Switch Console + Docker; run the Switch quickstart.

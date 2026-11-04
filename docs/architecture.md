@@ -20,6 +20,16 @@ REPORTED -> REPRODUCED -> VENDOR_NOTIFIED -> PATCH_SUBMITTED
   -> PATCH_SUBMITTED       (loop back on INCOMPLETE_FIX)
   -> ADVISORY_DRAFTED -> SIGNED_OFF -> PUBLISHED
 
+## Embargo clock (clock/clock.js)
+
+The Timekeeper drives a scalable clock so the embargo countdown is a live
+mechanism, not a quoted date. `CLOCK_SCALE` compresses embargo-days into real
+seconds (default 90-day deadline, 14-day silence window). The Timekeeper runs
+`clock.js init` on the report, `notify` on VENDOR_NOTIFIED, `ack` on a vendor
+reply, and `status` for every countdown. `status` raises SILENCE_EXCEEDED (vendor
+silent past the window -> escalate) and DEADLINE_PASSED (forced coordinated lift,
+matching the deadline backstop in readiness.js).
+
 ## Handoff (every arrow is a visible room message)
 
 Researcher --report--> Timekeeper --@repro--> Repro --TRIGGERED--> Timekeeper

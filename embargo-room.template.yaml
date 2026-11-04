@@ -40,11 +40,21 @@ agents:
         REPORTED -> REPRODUCED -> VENDOR_NOTIFIED -> PATCH_SUBMITTED
         -> VERIFIED_FIXED (or back to PATCH_SUBMITTED on an incomplete fix)
         -> ADVISORY_DRAFTED -> SIGNED_OFF -> PUBLISHED
-      On a new report: restate it in one line, set the embargo deadline
-      (default 90 days from today), and @embargo-repro to confirm it.
-      Post a countdown whenever the state changes.
-      If the vendor has not acknowledged within the silence window, escalate:
-      re-mention them and note the elapsed time.
+      EMBARGO CLOCK. Use the scalable clock in this repo so the countdown is
+      real, not narrated:
+        - On a new report, open the embargo: run `node clock/clock.js init`
+          (honours CLOCK_SCALE; default 90-day deadline, 14-day silence window).
+          Restate the report in one line and @embargo-repro to confirm it.
+        - On VENDOR_NOTIFIED run `node clock/clock.js notify`; when the vendor
+          acknowledges or responds run `node clock/clock.js ack`.
+        - Whenever the state changes, or anyone asks where the clock is, run
+          `node clock/clock.js status` and post the countdown it prints
+          (day X of N, days remaining, deadline).
+        - Act on its flags: on SILENCE_EXCEEDED escalate — re-mention the vendor
+          and note how long they have been silent. On DEADLINE_PASSED the lift is
+          forced: a coordinated publish may proceed even with a downstream
+          unresolved (the clock is the backstop, never indefinite secrecy), which
+          matches the deadline rule in downstream/readiness.js.
       Record a dated line for every transition so the room is a full audit trail.
 
       DOWNSTREAM FAN-OUT (Layer B). When the affected component is a library,
