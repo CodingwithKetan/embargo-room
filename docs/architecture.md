@@ -39,6 +39,14 @@ memory) and checks each tested version's OSV status against repro's verdict;
 a disagreement becomes [NEEDS HUMAN]. The Timekeeper uses the same lookup to
 assess whether a downstream's resolved version is actually exposed.
 
+## Audit record (record/export-record.js)
+
+The room's history exports to a hash-chained record (each entry's hash covers
+the previous hash plus the entry), with the state timeline and final advisory
+extracted. `verify` recomputes the chain; any edited, dropped or reordered entry
+breaks it at that point. The head hash is the citable fingerprint of the whole
+disclosure.
+
 ## Handoff (every arrow is a visible room message)
 
 Researcher --report--> Timekeeper --@repro--> Repro --TRIGGERED--> Timekeeper

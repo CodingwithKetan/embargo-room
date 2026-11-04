@@ -1,0 +1,92 @@
+{
+  "format": "embargo-room/audit-record@1",
+  "room": "switch/embargo-minimist-downstream-optimist",
+  "exported_at": "2026-11-04T05:27:01.406Z",
+  "source": "Switch room via its Mattermost bridge",
+  "entries": [
+    {
+      "seq": 1,
+      "ts": "2026-11-04T04:59:59.355Z",
+      "author": "embargo-timekeeper",
+      "role": "agent",
+      "text": "Hey! Ping @embargo-timekeeper and I'll jump in.",
+      "prev_hash": "ebf1856a0b185b031c775984dd17b7acbcf69b1259047bedfd8a960dd53609bb",
+      "hash": "70b559d9262b4958ca5f53378612c163636ce4a4886abb5698b12f82400bd889"
+    },
+    {
+      "seq": 2,
+      "ts": "2026-11-04T04:59:59.423Z",
+      "author": "embargo-repro",
+      "role": "agent",
+      "text": "Hi! I'm here to help — mention @embargo-repro anytime.",
+      "prev_hash": "70b559d9262b4958ca5f53378612c163636ce4a4886abb5698b12f82400bd889",
+      "hash": "eed9f747b494adf3a082d469e2f8e96f9a8f30b2f0691a770698cd46358d1119"
+    },
+    {
+      "seq": 3,
+      "ts": "2026-11-04T04:59:59.577Z",
+      "author": "switch-admin",
+      "role": "system",
+      "text": "Template kickoff on behalf of @user",
+      "prev_hash": "eed9f747b494adf3a082d469e2f8e96f9a8f30b2f0691a770698cd46358d1119",
+      "hash": "64c8ef3c1d5d9692d6f93577854617513ca812cf066b62b66b1826e2bca26f77"
+    },
+    {
+      "seq": 4,
+      "ts": "2026-11-04T04:59:59.657Z",
+      "author": "switch-admin",
+      "role": "system",
+      "text": "@embargo-timekeeper this is the downstream room for optimist, which depends\non minimist. Share the embargo (same deadline and secrecy as the parent),\nconfirm optimist is actually affected, and track this maintainer's status:\npending -> notified -> patched | wont-fix. Report changes back to the parent\nroom's readiness view. Do not reveal details beyond what the parent embargo allows.",
+      "prev_hash": "64c8ef3c1d5d9692d6f93577854617513ca812cf066b62b66b1826e2bca26f77",
+      "hash": "78c06bc408256d6e01b9e33914c5006c975fa7ec84303c6cfdf37575f9fe7f3c"
+    },
+    {
+      "seq": 5,
+      "ts": "2026-11-04T04:59:59.831Z",
+      "author": "embargo-timekeeper",
+      "role": "agent",
+      "text": "Starting a session to handle this — one moment.",
+      "prev_hash": "78c06bc408256d6e01b9e33914c5006c975fa7ec84303c6cfdf37575f9fe7f3c",
+      "hash": "d79944bbeb9944a660794c4b78ef6c99e7140215fa47e019bf907af24a401940"
+    },
+    {
+      "seq": 6,
+      "ts": "2026-11-04T05:00:49.799Z",
+      "author": "embargo-timekeeper",
+      "role": "agent",
+      "text": "On it — checking optimist's dependency on minimist and pulling the embargo terms from the parent room.",
+      "prev_hash": "d79944bbeb9944a660794c4b78ef6c99e7140215fa47e019bf907af24a401940",
+      "hash": "fb4e30adfa6851f1aeb01c33ec787bc3850831e88cc257caa29998dd59e79453"
+    },
+    {
+      "seq": 7,
+      "ts": "2026-11-04T05:01:05.701Z",
+      "author": "embargo-timekeeper",
+      "role": "agent",
+      "text": "@user **[2026-11-04] optimist downstream room opened. Status: wont-fix (carried over from the parent room)**\n\n- **Is optimist affected? Yes.** The npm registry shows optimist@0.6.1 depends on minimist `~0.0.1`, which installs minimist 0.0.10. In the parent room, repro ran the PoC against minimist 0.0.10 and got TRIGGERED. That test was on minimist itself, not through optimist's code.\n- **Embargo:** same deadline as the parent, **2027-02-02** (90 days from 2026-11-04). The parent room has already moved to **PUBLISHED** (2026-11-04), so the embargo there is lifted. In this room I'll share only what the published advisory says: CVE-2021-44906, minimist `<= 1.2.5` affected, fixed in `1.2.6`.\n- **Maintainer status:** you set optimist to **wont-fix** in the parent because it's unmaintained (last release 0.6.1). Nobody contacted an optimist maintainer, and no separate maintainer account is in this room.\n\nReadiness is unchanged, so I have nothing new to post to the parent room:\n```\n[x] rc        patched\n[x] subarg    patched\n[x] optimist  wont-fix\nDECISION: READY\n```\n\n**Your call:** keep wont-fix as recorded, or reopen it as `pending` and track a real optimist maintainer here? Reopening would move readiness back to HOLD after the fact. The parent stays PUBLISHED either way.",
+      "prev_hash": "fb4e30adfa6851f1aeb01c33ec787bc3850831e88cc257caa29998dd59e79453",
+      "hash": "f37750ba9f161b08df14e3cceefab81e04139bc8ba803016627915c140919f70"
+    },
+    {
+      "seq": 8,
+      "ts": "2026-11-04T05:02:37.769Z",
+      "author": "user",
+      "role": "human",
+      "text": "@embargo-timekeeper Relaying for optimist. optimist is unmaintained (last release 0.6.1, 2015) and pins minimist `~0.0.1` → 0.0.10, which repro confirmed vulnerable. There is no active maintainer to notify and it will not ship a fix. Log **notified: unreachable (unmaintained), 2026-11-04** → resolution **wont-fix**. Recommend consumers migrate off optimist (e.g. to yargs) or force-resolve minimist to >= 1.2.6. Keep optimist at wont-fix.",
+      "prev_hash": "f37750ba9f161b08df14e3cceefab81e04139bc8ba803016627915c140919f70",
+      "hash": "0329c4e7cd2a3aadd31b6eb5474778e481bc1ae9d76d8c68a11bfb7ba900d176"
+    },
+    {
+      "seq": 9,
+      "ts": "2026-11-04T05:02:45.887Z",
+      "author": "embargo-timekeeper",
+      "role": "agent",
+      "text": "**[2026-11-04] optimist: recorded as wont-fix**\n\nAudit trail for this downstream:\n```\n2026-11-04  pending      optimist@0.6.1 depends on minimist ~0.0.1 (resolves to 0.0.10, confirmed TRIGGERED)\n2026-11-04  notified     unreachable: unmaintained, last release 0.6.1 (2015), no active maintainer (relayed by reporter)\n2026-11-04  wont-fix     no fix will ship\n```\n\n**Consumer guidance (from the reporter):** migrate off optimist (for example to yargs), or force-resolve minimist to `>= 1.2.6`.\n\noptimist was already wont-fix, so readiness stays 🟢 **READY** and the parent room doesn't need an update.\n\n**Embargo:** original deadline 2027-02-02 (90 days out). The parent advisory is already PUBLISHED.",
+      "prev_hash": "0329c4e7cd2a3aadd31b6eb5474778e481bc1ae9d76d8c68a11bfb7ba900d176",
+      "hash": "91dd535bef4943d4dd8d9c4131e3dde562d1c49ad77d82c746b410f17bd3f32a"
+    }
+  ],
+  "timeline": [],
+  "advisory": null,
+  "head_hash": "91dd535bef4943d4dd8d9c4131e3dde562d1c49ad77d82c746b410f17bd3f32a"
+}

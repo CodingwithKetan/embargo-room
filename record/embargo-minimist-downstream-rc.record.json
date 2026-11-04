@@ -1,0 +1,92 @@
+{
+  "format": "embargo-room/audit-record@1",
+  "room": "switch/embargo-minimist-downstream-rc",
+  "exported_at": "2026-11-04T05:27:01.013Z",
+  "source": "Switch room via its Mattermost bridge",
+  "entries": [
+    {
+      "seq": 1,
+      "ts": "2026-11-04T04:58:55.435Z",
+      "author": "embargo-timekeeper",
+      "role": "agent",
+      "text": "Hey! Ping @embargo-timekeeper and I'll jump in.",
+      "prev_hash": "89ba455cd2583c91835f6c97027c4b1c351b0ea5e3e1cba2505350bc30355120",
+      "hash": "267dfc1822a8a17aaeee63a3063193e1fdc426387db8a18c0478f387a1589546"
+    },
+    {
+      "seq": 2,
+      "ts": "2026-11-04T04:58:55.500Z",
+      "author": "embargo-repro",
+      "role": "agent",
+      "text": "Hello! Tag @embargo-repro to loop me in.",
+      "prev_hash": "267dfc1822a8a17aaeee63a3063193e1fdc426387db8a18c0478f387a1589546",
+      "hash": "baa7fdd1988e7efc20384ae75fa01dc86a9e9be851757826421f360f5217404f"
+    },
+    {
+      "seq": 3,
+      "ts": "2026-11-04T04:58:55.606Z",
+      "author": "switch-admin",
+      "role": "system",
+      "text": "Template kickoff on behalf of @user",
+      "prev_hash": "baa7fdd1988e7efc20384ae75fa01dc86a9e9be851757826421f360f5217404f",
+      "hash": "6b75eef1ae20e090f8697bbb4a5491ce099ef7bd2891b2f55b9ae073b4809d30"
+    },
+    {
+      "seq": 4,
+      "ts": "2026-11-04T04:58:55.686Z",
+      "author": "switch-admin",
+      "role": "system",
+      "text": "@embargo-timekeeper this is the downstream room for rc, which depends\non minimist. Share the embargo (same deadline and secrecy as the parent),\nconfirm rc is actually affected, and track this maintainer's status:\npending -> notified -> patched | wont-fix. Report changes back to the parent\nroom's readiness view. Do not reveal details beyond what the parent embargo allows.",
+      "prev_hash": "6b75eef1ae20e090f8697bbb4a5491ce099ef7bd2891b2f55b9ae073b4809d30",
+      "hash": "8afc121bff9725b571773a930238bf7d9aeba3c1b7b8682d25823f3aef4e91bb"
+    },
+    {
+      "seq": 5,
+      "ts": "2026-11-04T04:58:55.797Z",
+      "author": "embargo-timekeeper",
+      "role": "agent",
+      "text": "Starting a session to handle this — one moment.",
+      "prev_hash": "8afc121bff9725b571773a930238bf7d9aeba3c1b7b8682d25823f3aef4e91bb",
+      "hash": "b554ef847e782e7be3d7a8efd1479ad60720ae6450e96db2591b6c086bf23695"
+    },
+    {
+      "seq": 6,
+      "ts": "2026-11-04T04:59:17.251Z",
+      "author": "embargo-timekeeper",
+      "role": "agent",
+      "text": "On it — pulling the parent embargo terms and checking that rc really depends on minimist.",
+      "prev_hash": "b554ef847e782e7be3d7a8efd1479ad60720ae6450e96db2591b6c086bf23695",
+      "hash": "d6e4febf269d74e8cd57f717409456f400ab8e623ee85d35ae46eb3831817c76"
+    },
+    {
+      "seq": 7,
+      "ts": "2026-11-04T05:00:12.693Z",
+      "author": "embargo-timekeeper",
+      "role": "agent",
+      "text": "@user **[2026-11-04] rc downstream room: opened**\n\n**Embargo:** same deadline as the parent, 2027-02-02 (90 days left). The parent case was already PUBLISHED today, so the embargo is lifted. I'll share only what the published advisory says: CVE-2021-44906, prototype pollution in minimist, affected <= 1.2.5, fixed in 1.2.6. The PoC stays in the parent room.\n\n**Is rc affected:** yes. The latest rc (1.2.8) depends on minimist ^1.2.0. That range covers the affected versions 1.2.0–1.2.5 and also allows 1.2.6. So a fresh install gets the fix, but an install whose lockfile pins 1.2.5 or lower stays exposed until it updates.\n\n**Status:** rc is already recorded as **patched**. The parent set that before publishing, on the researcher's instruction, because rc's range accepts 1.2.6 and rc doesn't need to ship a release of its own. Readiness hasn't changed: 🟢 READY (rc patched, subarg patched, optimist wont-fix). Since nothing changed, there's nothing new to report to the parent.\n\n**Gap in the audit trail:** rc skipped the pending → notified steps. Nobody contacted an rc maintainer before rc was marked patched, and this room has no account for one. If you want a real notification on record, add the maintainer here or tell me who is relaying for them, and I'll log \"notified\" with the date. Otherwise rc stays at patched.",
+      "prev_hash": "d6e4febf269d74e8cd57f717409456f400ab8e623ee85d35ae46eb3831817c76",
+      "hash": "c387281b70a3cf7bffb97cb6800ea68b32e9dce2347060cac5cc95cbb5a05389"
+    },
+    {
+      "seq": 8,
+      "ts": "2026-11-04T05:02:37.750Z",
+      "author": "user",
+      "role": "human",
+      "text": "@embargo-timekeeper Relaying for rc (no separate maintainer account here). rc@1.2.8 depends on minimist `^1.2.0`, which already accepts the fixed 1.2.6 — rc needs no release of its own; consumers pick up the fix on install/update. For the record: log **notified 2026-11-04 (relayed)** → resolution **patched**. (Consumers with lockfiles pinned <= 1.2.5 should run `npm update minimist`.) Keep rc at patched.",
+      "prev_hash": "c387281b70a3cf7bffb97cb6800ea68b32e9dce2347060cac5cc95cbb5a05389",
+      "hash": "d3283a4f988d4f857d7c93316a919633e259ffda90eb0e94135bc50014c8a647"
+    },
+    {
+      "seq": 9,
+      "ts": "2026-11-04T05:02:45.367Z",
+      "author": "embargo-timekeeper",
+      "role": "agent",
+      "text": "Recorded. rc's audit trail:\n\n**[2026-11-04] rc: pending → notified** (relayed by the researcher; rc has no maintainer account here)\n**[2026-11-04] rc: notified → patched** (rc@1.2.8 depends on minimist ^1.2.0, which accepts the fixed 1.2.6, so rc needs no release of its own. Consumers with lockfiles pinned at 1.2.5 or lower should run `npm update minimist`.)\n\nrc stays **patched**, so the status file doesn't change and readiness is still 🟢 READY (rc patched, subarg patched, optimist wont-fix). The deadline is still 2027-02-02 (90 days left), but the parent was published today, so the embargo is already lifted. Since the status didn't change, I haven't posted to the parent. rc is closed in this room.",
+      "prev_hash": "d3283a4f988d4f857d7c93316a919633e259ffda90eb0e94135bc50014c8a647",
+      "hash": "fe59f3bbfcd2add8b75ec121b55acdeca82811aa0019afffe0837f5b3723138c"
+    }
+  ],
+  "timeline": [],
+  "advisory": null,
+  "head_hash": "fe59f3bbfcd2add8b75ec121b55acdeca82811aa0019afffe0837f5b3723138c"
+}

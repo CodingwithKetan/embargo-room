@@ -138,6 +138,24 @@ the conflict for a human instead of picking one. (OSV also confirms the
 incomplete-fix story on its own: at 1.2.5 only CVE-2021-44906 still applies,
 because 1.2.5 had fixed CVE-2020-7598 but not its bypass.)
 
+### Verifiable audit record — the room *is* the record, provably
+
+`record/export-record.js` exports a room's history into a tamper-evident record:
+every message is an entry hash-chained to the one before it, with the state
+timeline and the final advisory extracted alongside. Publish the head hash next
+to the advisory, and anyone can re-verify the whole trail:
+
+```bash
+node record/export-record.js verify record/embargo-minimist-demo.record.json
+# VERIFIED  64 entries, chain intact — head f8f0152af0469112…
+```
+
+The records of the real run (parent + the three Layer B rooms) are committed in
+`record/`. Change one word — say, rewrite repro's `INCOMPLETE_FIX` as
+`VERIFIED_FIXED` — and verification fails at that exact entry. Nobody can
+quietly rewrite "the fix didn't work." (Export a live room with
+`MM_TOKEN=… node record/export-record.js export switch/<channel>`.)
+
 ### 2. Run the full room
 
 1. Install Switch Console + Docker; run the Switch quickstart.

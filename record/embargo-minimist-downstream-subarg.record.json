@@ -1,0 +1,92 @@
+{
+  "format": "embargo-room/audit-record@1",
+  "room": "switch/embargo-minimist-downstream-subarg",
+  "exported_at": "2026-11-04T05:27:01.199Z",
+  "source": "Switch room via its Mattermost bridge",
+  "entries": [
+    {
+      "seq": 1,
+      "ts": "2026-11-04T04:59:24.963Z",
+      "author": "embargo-timekeeper",
+      "role": "agent",
+      "text": "Hi! Mention @embargo-timekeeper to get my attention.",
+      "prev_hash": "318a64fd3344cca48d5ab4dd280bf7c88b9fedd408b08c5d179e3d9605c5d522",
+      "hash": "fd9b7514c9a0952e0fba4389224c2ea0163a80c0a415a21813499aae42a32ff4"
+    },
+    {
+      "seq": 2,
+      "ts": "2026-11-04T04:59:25.061Z",
+      "author": "embargo-repro",
+      "role": "agent",
+      "text": "Hello! I'm ready — just tag @embargo-repro when you need me.",
+      "prev_hash": "fd9b7514c9a0952e0fba4389224c2ea0163a80c0a415a21813499aae42a32ff4",
+      "hash": "fdd324b2059d4a03502e9e2790f90a5de70d114081d3a93e05bbb5865a90bff7"
+    },
+    {
+      "seq": 3,
+      "ts": "2026-11-04T04:59:25.228Z",
+      "author": "switch-admin",
+      "role": "system",
+      "text": "Template kickoff on behalf of @user",
+      "prev_hash": "fdd324b2059d4a03502e9e2790f90a5de70d114081d3a93e05bbb5865a90bff7",
+      "hash": "907d9badfc0d2a31a043f82a1c559767fe461ff088e2c13ffa864bc4e307bfa7"
+    },
+    {
+      "seq": 4,
+      "ts": "2026-11-04T04:59:25.333Z",
+      "author": "switch-admin",
+      "role": "system",
+      "text": "@embargo-timekeeper this is the downstream room for subarg, which depends\non minimist. Share the embargo (same deadline and secrecy as the parent),\nconfirm subarg is actually affected, and track this maintainer's status:\npending -> notified -> patched | wont-fix. Report changes back to the parent\nroom's readiness view. Do not reveal details beyond what the parent embargo allows.",
+      "prev_hash": "907d9badfc0d2a31a043f82a1c559767fe461ff088e2c13ffa864bc4e307bfa7",
+      "hash": "33d7da5ebfb5a14171c48050ff725505eb3516c75d49ddee0871355f83d344bb"
+    },
+    {
+      "seq": 5,
+      "ts": "2026-11-04T04:59:25.483Z",
+      "author": "embargo-timekeeper",
+      "role": "agent",
+      "text": "Starting a session to handle this — one moment.",
+      "prev_hash": "33d7da5ebfb5a14171c48050ff725505eb3516c75d49ddee0871355f83d344bb",
+      "hash": "47a0545f5790afd27425bc42237efd09ccd2cbfc54ce9b5828fef243611faf52"
+    },
+    {
+      "seq": 6,
+      "ts": "2026-11-04T04:59:50.184Z",
+      "author": "embargo-timekeeper",
+      "role": "agent",
+      "text": "On it. I'm pulling the embargo terms from the parent room and checking that subarg really depends on minimist.",
+      "prev_hash": "47a0545f5790afd27425bc42237efd09ccd2cbfc54ce9b5828fef243611faf52",
+      "hash": "dc1facc03163f213acccc64ab34ac05f550df15f5d42aa73190adbe3db1c3452"
+    },
+    {
+      "seq": 7,
+      "ts": "2026-11-04T05:00:28.704Z",
+      "author": "embargo-timekeeper",
+      "role": "agent",
+      "text": "@user **[2026-11-04] subarg downstream room: opened**\n\n**Embargo:** same deadline as the parent, 2027-02-02 (90 days left). The parent case was already PUBLISHED today, so the embargo is lifted. I'll share only what the published advisory says: CVE-2021-44906, prototype pollution in minimist, affected <= 1.2.5, fixed in 1.2.6. The PoC stays in the parent room.\n\n**Is subarg affected:** yes. The latest subarg (1.0.0) depends on minimist ^1.1.0. That range covers the affected versions 1.1.0 to 1.2.5 and also allows 1.2.6. A fresh install gets the fix, but an install whose lockfile pins 1.2.5 or lower stays exposed until it updates.\n\n**Status:** subarg is already recorded as **patched**. The parent set that before publishing, on the researcher's instruction, because subarg's range accepts 1.2.6 and subarg doesn't need to ship its own release. Readiness is unchanged at 🟢 READY (rc patched, subarg patched, optimist wont-fix), so there's nothing new to report to the parent.\n\n**Gap in the audit trail:** subarg skipped the pending and notified steps. Nobody contacted a subarg maintainer before it was marked patched, and this room has no account for one. If you want a real notification on record, add the maintainer here or tell me who is relaying for them, and I'll log \"notified\" with the date. Otherwise subarg stays at patched.",
+      "prev_hash": "dc1facc03163f213acccc64ab34ac05f550df15f5d42aa73190adbe3db1c3452",
+      "hash": "7976eceaefe7c8db118935042420f69569ece3102e0ece6eb6feb17ce6d40652"
+    },
+    {
+      "seq": 8,
+      "ts": "2026-11-04T05:02:37.758Z",
+      "author": "user",
+      "role": "human",
+      "text": "@embargo-timekeeper Relaying for subarg. subarg@1.0.0 depends on minimist `^1.1.0`, which accepts 1.2.6 — no subarg release needed; the fix flows through on update. Log **notified 2026-11-04 (relayed)** → resolution **patched**. Keep subarg at patched.",
+      "prev_hash": "7976eceaefe7c8db118935042420f69569ece3102e0ece6eb6feb17ce6d40652",
+      "hash": "e642022a59de26681319c7241ca0b1e219331f841d580b1c628b0254362aab16"
+    },
+    {
+      "seq": 9,
+      "ts": "2026-11-04T05:02:48.417Z",
+      "author": "embargo-timekeeper",
+      "role": "agent",
+      "text": "Logged. subarg's audit trail now reads:\n\n```\n[2026-11-04] pending   downstream room opened; edge confirmed (subarg@1.0.0 -> minimist ^1.1.0)\n[2026-11-04] notified  relayed by user on the maintainer's behalf\n[2026-11-04] patched   no subarg release needed; ^1.1.0 accepts minimist 1.2.6, so the fix arrives on update\n```\n\nsubarg stays at **patched**. Since that status hasn't changed, I left the downstream state as it was. Readiness is still 🟢 READY (rc patched, subarg patched, optimist wont-fix), with the embargo already lifted and the 2027-02-02 deadline 90 days away. There's nothing new for the parent's readiness view, so I haven't posted there. This room is resolved.",
+      "prev_hash": "e642022a59de26681319c7241ca0b1e219331f841d580b1c628b0254362aab16",
+      "hash": "b1c2f576ddf58f34f02bfd5a765dd1fb0aa2868521974a1ec3993b290be65567"
+    }
+  ],
+  "timeline": [],
+  "advisory": null,
+  "head_hash": "b1c2f576ddf58f34f02bfd5a765dd1fb0aa2868521974a1ec3993b290be65567"
+}
