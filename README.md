@@ -8,7 +8,7 @@ vendor's sign-off and the researcher's go-to-publish.**
 Built for the Flip the Switch hackathon (WeMakeDevs × DevTools Academy ×
 Switch). Track 1: Best Business Workflow.
 
-> **Watch the 3-minute demo:** _(link here)_
+> **Watch the 3-minute demo:** _(video link added on submission — run-of-show in [`demo/script.md`](demo/script.md))_
 > **Live control room:** a one-screen view of the real run — state machine, two-source
 > patch verification, downstream readiness, and the tamper-evident record — in
 > [`dashboard/control-room.html`](dashboard/control-room.html) (every figure traces to
@@ -141,7 +141,8 @@ Instead of only pre-pinned versions, the Repro agent verifies the vendor's
 ```
 
 The clone happens at image-build time; the PoC runs with `--network none`.
-This turns the project from a historical replay into a live patch verifier.
+This turns the project from a historical replay into a live patch verifier. See
+[`docs/layer-a.md`](docs/layer-a.md).
 
 ### Layer B — downstream coordination across rooms
 

@@ -62,3 +62,25 @@ clock; humans make the two trust decisions.
 ## Layer B (downstream fan-out)
 
 Parent room + one child room per confirmed dependent, same Timekeeper in all. See docs/layer-b.md for the protocol and the readiness rule.
+
+## The full stack
+
+Every capability, and where it's documented:
+
+| Capability | What it adds | Docs |
+| --- | --- | --- |
+| Core harness | The PoC + pinned Docker targets; the verified arc (1.2.0/1.2.5/1.2.6) | README "Verify the harness" |
+| **Layer A** | Verify the vendor's REAL commit, built from source | [layer-a.md](layer-a.md) |
+| **Layer B** | Downstream coordination across rooms; the readiness gate | [layer-b.md](layer-b.md) |
+| **Layer C** | Emit the public advisory (OSV + CVE 5.0 + GHSA), validated vs OSV | [layer-c.md](layer-c.md) |
+| **Layer D** | Attest the agent's work — verdicts backed by tamper-evident runs | [layer-d.md](layer-d.md) |
+| Auto mode | Watch OSV for new CVEs; propose, wait for a human | [watch-mode.md](watch-mode.md) |
+| Embargo clock | Scalable countdown + silence escalation | this doc, above |
+| Grounding | Two-source agreement (build + OSV) | this doc, above |
+| Audit record | Tamper-evident, hash-chained export | this doc, above |
+| Security | Threat model, repo allowlist, sandbox, runnable red-team | [../SECURITY.md](../SECURITY.md) |
+| Bridge layer | Bridge-agnostic failover (Slack ⇄ Mattermost) | [bridges.md](bridges.md) |
+
+The pipeline is **A → B → C → D**: verify the upstream fix, coordinate the
+downstreams, publish the standard advisory, and attest that the agent did the
+work. Trust-but-verify, applied to both the vendor *and* the agent.
