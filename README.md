@@ -8,7 +8,7 @@ vendor's sign-off and the researcher's go-to-publish.**
 Built for the Flip the Switch hackathon (WeMakeDevs × DevTools Academy ×
 Switch). Track 1: Best Business Workflow.
 
-> **Watch the 3-minute demo:** _(video link added on submission — run-of-show in [`demo/script.md`](demo/script.md))_
+> **Watch the 3-minute demo:** _(video link added on submission — run-of-show in [`demo/record-live.md`](demo/record-live.md), word-for-word script in [`demo/narration.md`](demo/narration.md))_
 > **Live control room:** a one-screen view of the real run — state machine, two-source
 > patch verification, downstream readiness, and the tamper-evident record — in
 > [`dashboard/control-room.html`](dashboard/control-room.html) (every figure traces to
@@ -84,7 +84,9 @@ embargo clock, and the repo-allowlist guard; it adds the OSV cross-check and the
 Docker case framework when a network and Docker are available, and skips them
 cleanly when not. A clean clone prints `ALL CHECKS PASS`. Individual pieces:
 `npm run verify` · `npm run cases` · `npm run osv` · `npm run readiness` ·
-`npm run record:verify` · `npm run clock:demo`.
+`npm run record:verify` · `npm run clock:demo` · `npm run dashboard`
+(local activity view: which agent did what, status, failures — see
+[`docs/dashboard.md`](docs/dashboard.md)).
 
 ### 1. Verify the harness (no Switch needed — ~15s)
 

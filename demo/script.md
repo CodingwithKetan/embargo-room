@@ -39,7 +39,7 @@ Target: **~3:15** (a strict 3:00 cut is noted at the end). One continuous take.
 | 2:00 | **Human gate + Layer B** | A | "The two trust decisions stay human. And nobody publishes alone." | Both humans sign off (human-only). Layer B readiness → **READY** → **PUBLISHED**. |
 | 2:15 | **🔒 Prevent-hack** | C | "Agents that run code are a target. So what if your Slack gets hacked?" | Terminal: `npm run redteam` → **5/5 BLOCKED** (hostile repo, malicious dependency, backdoor callback, "publish anyway" injection, faked verdict). |
 | 2:45 | **Can't be forged** | C | "And nobody can quietly rewrite 'the fix didn't work.'" | `node record/export-record.js verify …` → intact. Change one word → **verify FAILS** at that entry. `npm run assure` → "ASSURED: the agent did the work it claimed." |
-| 3:05 | **Close + reproduce** | C → B | "It even emits the real public advisory — and the whole thing reproduces from a clone." | `npm run emit:validate` → **VALIDATED vs OSV**. `npm test` → **16/16**. End on the dashboard. "The room's history *is* the disclosure record." |
+| 3:05 | **Close + reproduce** | C → B | "It even emits the real public advisory — and the whole thing reproduces from a clone." | `npm run emit:validate` → **VALIDATED vs OSV**. `npm test` → **18/18**. End on the dashboard. "The room's history *is* the disclosure record." |
 
 ---
 
@@ -78,7 +78,7 @@ Autonomous discovery, but every consequential action still needs a human."*
 Cut in this order until you fit:
 1. Compress Layer B to a 5s glance at the readiness view (don't narrate each downstream).
 2. Drop the auto-mode opener (start at the report) — reclaim ~20s. *(Keep it if you can; it's a differentiator.)*
-3. Shorten the close: `npm test → 16/16` flash only, skip `emit:validate`.
+3. Shorten the close: `npm test → 18/18` flash only, skip `emit:validate`.
 
 Never cut: the **INCOMPLETE_FIX** beat (1:05) or the **prevent-hack** beat (2:15).
 
