@@ -1,0 +1,156 @@
+{
+  "generatedAt": "2026-11-04T05:36:20.963Z",
+  "parent": {
+    "room": "switch/embargo-minimist-demo",
+    "entries": 64,
+    "head": "f8f0152af046911278bdeab85ae7bbdf3216fdb4140e9a755abe8380ef9f2bd0",
+    "stateEvents": 10,
+    "advisory": {
+      "id": "CVE-2021-44906",
+      "status": "PUBLISHED",
+      "affected": "<= 1.2.5",
+      "fixed": "1.2.6",
+      "cvss": 5.6,
+      "severity": "Medium",
+      "vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L",
+      "related": [
+        "CVE-2020-7598"
+      ]
+    },
+    "timeline": [
+      {
+        "ts": "2026-11-03T20:59:10.902Z",
+        "by": "embargo-timekeeper",
+        "transition": "REPORTED"
+      },
+      {
+        "ts": "2026-11-03T20:59:56.698Z",
+        "by": "embargo-repro",
+        "transition": "REPRODUCED (verdict)"
+      },
+      {
+        "ts": "2026-11-03T21:01:58.602Z",
+        "by": "embargo-timekeeper",
+        "transition": "REPORTED → REPRODUCED"
+      },
+      {
+        "ts": "2026-11-03T21:04:56.283Z",
+        "by": "embargo-timekeeper",
+        "transition": "REPRODUCED → VENDOR_NOTIFIED → PATCH_SUBMITTED"
+      },
+      {
+        "ts": "2026-11-03T21:05:46.852Z",
+        "by": "embargo-repro",
+        "transition": "INCOMPLETE_FIX (verdict)"
+      },
+      {
+        "ts": "2026-11-03T21:07:37.384Z",
+        "by": "embargo-repro",
+        "transition": "VERIFIED_FIXED (verdict)"
+      },
+      {
+        "ts": "2026-11-03T21:08:10.455Z",
+        "by": "embargo-timekeeper",
+        "transition": "PATCH_SUBMITTED → VERIFIED_FIXED"
+      },
+      {
+        "ts": "2026-11-03T21:11:39.915Z",
+        "by": "embargo-timekeeper",
+        "transition": "VERIFIED_FIXED → ADVISORY_DRAFTED"
+      },
+      {
+        "ts": "2026-11-03T21:14:17.774Z",
+        "by": "embargo-timekeeper",
+        "transition": "ADVISORY_DRAFTED → SIGNED_OFF"
+      },
+      {
+        "ts": "2026-11-03T21:17:18.332Z",
+        "by": "embargo-timekeeper",
+        "transition": "SIGNED_OFF → PUBLISHED"
+      }
+    ]
+  },
+  "embargo": {
+    "deadline": "2027-02-02",
+    "days": 90,
+    "opened": "2026-11-04"
+  },
+  "downstreams": [
+    {
+      "package": "rc",
+      "status": "patched"
+    },
+    {
+      "package": "subarg",
+      "status": "patched"
+    },
+    {
+      "package": "optimist",
+      "status": "wont-fix"
+    }
+  ],
+  "readiness": "READY",
+  "cases": [
+    {
+      "cve": "CVE-2021-44906",
+      "osv": "GHSA-xvch-5gv4-984h",
+      "vector": "Function.prototype (constructor chain)",
+      "fixed": "1.2.6",
+      "rows": [
+        [
+          "1.2.0",
+          "TRIGGERED"
+        ],
+        [
+          "1.2.5",
+          "TRIGGERED"
+        ],
+        [
+          "1.2.6",
+          "SAFE"
+        ]
+      ]
+    },
+    {
+      "cve": "CVE-2020-7598",
+      "osv": "GHSA-vh95-rmgr-6w4m",
+      "vector": "Object.prototype (__proto__)",
+      "fixed": "1.2.3",
+      "rows": [
+        [
+          "1.2.0",
+          "TRIGGERED"
+        ],
+        [
+          "1.2.3",
+          "SAFE"
+        ],
+        [
+          "1.2.5",
+          "SAFE"
+        ],
+        [
+          "1.2.6",
+          "SAFE"
+        ]
+      ]
+    }
+  ],
+  "kids": [
+    {
+      "pkg": "rc",
+      "entries": 9,
+      "head": "fe59f3bbfcd2add8b75ec121b55acdeca82811aa0019afffe0837f5b3723138c"
+    },
+    {
+      "pkg": "subarg",
+      "entries": 9,
+      "head": "b1c2f576ddf58f34f02bfd5a765dd1fb0aa2868521974a1ec3993b290be65567"
+    },
+    {
+      "pkg": "optimist",
+      "entries": 9,
+      "head": "91dd535bef4943d4dd8d9c4131e3dde562d1c49ad77d82c746b410f17bd3f32a"
+    }
+  ]
+}

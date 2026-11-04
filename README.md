@@ -9,6 +9,10 @@ Built for the Flip the Switch hackathon (WeMakeDevs × DevTools Academy ×
 Switch). Track 1: Best Business Workflow.
 
 > **Watch the 3-minute demo:** _(link here)_
+> **Live control room:** a one-screen view of the real run — state machine, two-source
+> patch verification, downstream readiness, and the tamper-evident record — in
+> [`dashboard/control-room.html`](dashboard/control-room.html) (every figure traces to
+> `record/*.record.json`, `downstream/state.json` and osv.dev).
 
 ## The problem
 

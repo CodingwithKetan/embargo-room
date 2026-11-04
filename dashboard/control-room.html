@@ -1,0 +1,313 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Embargo Control Room</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  /* Control-room layout: a status header, a KPI strip, then a two-column grid
+     (state-machine spine + evidence) that stacks on phones. Palette: cool slate
+     neutrals, one indigo accent, three semantic signals (critical/good/watch). */
+  :root {
+    --bg: #eef0f4; --surface: #ffffff; --surface-2: #f5f6f9;
+    --fg: #191c23; --muted: #5a6471; --faint: #8a94a3;
+    --border: #e0e4ea; --border-strong: #cdd3dd;
+    --accent: #3b5bdb; --accent-soft: #e7ebfb;
+    --critical: #d13b3b; --critical-soft: #fbe6e6;
+    --good: #2b8a3e; --good-soft: #e4f3e7;
+    --watch: #b8860b; --watch-soft: #f6eed6;
+    --shadow: 0 1px 2px rgba(20,26,40,.05), 0 2px 10px rgba(20,26,40,.04);
+    --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: "IBM Plex Sans", system-ui, -apple-system, Segoe UI, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0d1016; --surface: #151a22; --surface-2: #1b212b;
+      --fg: #e7ebf2; --muted: #9aa4b3; --faint: #6b7686;
+      --border: #242b36; --border-strong: #333c49;
+      --accent: #8ea2ff; --accent-soft: #1c2440;
+      --critical: #ff6b6b; --critical-soft: #35191b;
+      --good: #5bc46b; --good-soft: #15291a;
+      --watch: #e3b341; --watch-soft: #2e2510;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 2px 12px rgba(0,0,0,.28);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d1016; --surface: #151a22; --surface-2: #1b212b;
+    --fg: #e7ebf2; --muted: #9aa4b3; --faint: #6b7686;
+    --border: #242b36; --border-strong: #333c49;
+    --accent: #8ea2ff; --accent-soft: #1c2440;
+    --critical: #ff6b6b; --critical-soft: #35191b;
+    --good: #5bc46b; --good-soft: #15291a;
+    --watch: #e3b341; --watch-soft: #2e2510;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 2px 12px rgba(0,0,0,.28);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font-family: var(--sans); line-height: 1.5; }
+  .wrap { max-width: 1120px; margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 28px 56px; }
+  h1, h2, h3 { margin: 0; text-wrap: balance; line-height: 1.2; }
+  .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .eyebrow { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); font-weight: 600; }
+
+  /* ---- header ---- */
+  header { display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: flex-end;
+    justify-content: space-between; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .title-block { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .title-row { display: flex; align-items: center; gap: 12px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 4px var(--good-soft); flex: none; }
+  h1 { font-size: 26px; font-weight: 700; letter-spacing: -.01em; }
+  .sub { color: var(--muted); font-size: 14px; max-width: 62ch; }
+  .idchip { display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    font-family: var(--mono); font-size: 13px; }
+  .idchip b { color: var(--fg); font-weight: 600; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono);
+    font-size: 11.5px; font-weight: 600; padding: 3px 9px; border-radius: 999px;
+    border: 1px solid transparent; letter-spacing: .02em; white-space: nowrap; }
+  .pill.pub { color: var(--good); background: var(--good-soft); border-color: color-mix(in srgb, var(--good) 30%, transparent); }
+  .pill.sev { color: var(--watch); background: var(--watch-soft); border-color: color-mix(in srgb, var(--watch) 30%, transparent); }
+  .theme-btn { font-family: var(--mono); font-size: 12px; color: var(--muted); background: var(--surface);
+    border: 1px solid var(--border-strong); border-radius: 8px; padding: 7px 12px; cursor: pointer; }
+  .theme-btn:hover { color: var(--fg); border-color: var(--accent); }
+
+  /* ---- kpi strip ---- */
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 22px 0 8px; }
+  .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); }
+  .kpi .v { font-family: var(--mono); font-size: 25px; font-weight: 600; letter-spacing: -.02em; display: flex; align-items: baseline; gap: 7px; }
+  .kpi .v small { font-size: 13px; color: var(--muted); font-weight: 500; }
+  .kpi .k { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .kpi .src { font-size: 10.5px; color: var(--faint); margin-top: 8px; font-family: var(--mono); }
+  .kpi.good .v { color: var(--good); }
+
+  /* ---- layout grid ---- */
+  .grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 16px; margin-top: 16px; align-items: start; }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; }
+  .panel > .head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+    padding: 14px 18px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .panel > .head h2 { font-size: 15px; font-weight: 600; }
+  .panel > .head .note { font-size: 12px; color: var(--muted); }
+  .panel > .body { padding: 16px 18px; }
+  .span-2 { grid-column: 1 / -1; }
+
+  /* ---- state timeline (the spine) ---- */
+  .tl { display: flex; flex-direction: column; }
+  .ev { display: grid; grid-template-columns: 58px 1fr; gap: 14px; position: relative; padding-bottom: 4px; }
+  .ev .t { font-family: var(--mono); font-size: 11.5px; color: var(--faint); text-align: right; padding-top: 11px; }
+  .ev .line { position: relative; padding: 0 0 16px 20px; }
+  .ev .line::before { content: ""; position: absolute; left: 0; top: 6px; width: 11px; height: 11px; border-radius: 50%;
+    background: var(--surface); border: 2px solid var(--border-strong); }
+  .ev .line::after { content: ""; position: absolute; left: 5px; top: 17px; bottom: -6px; width: 2px; background: var(--border); }
+  .ev:last-child .line::after { display: none; }
+  .ev.state .line::before { border-color: var(--accent); background: var(--accent); }
+  .ev.pub .line::before { border-color: var(--good); background: var(--good); box-shadow: 0 0 0 4px var(--good-soft); }
+  .ev .state-name { font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: -.01em; }
+  .ev .by { font-size: 11.5px; color: var(--muted); margin-top: 1px; }
+  .ev.incomplete .line::before { border-color: var(--critical); background: var(--critical); box-shadow: 0 0 0 4px var(--critical-soft); }
+  .ev.incomplete .state-name { color: var(--critical); }
+  .verdict { display: inline-block; font-family: var(--mono); font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 5px; margin-left: 2px; }
+  .verdict.trig { color: var(--critical); background: var(--critical-soft); }
+  .verdict.safe { color: var(--good); background: var(--good-soft); }
+  .loopnote { margin: 4px 0 10px 20px; padding: 8px 11px; border-left: 2px solid var(--critical);
+    background: var(--critical-soft); border-radius: 0 7px 7px 0; font-size: 12px; color: var(--fg); }
+  .loopnote b { color: var(--critical); }
+
+  /* ---- matrices ---- */
+  .case { margin-bottom: 18px; }
+  .case:last-child { margin-bottom: 0; }
+  .case .ch { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+  .case .ch .cve { font-family: var(--mono); font-weight: 600; font-size: 13px; }
+  .case .ch .vec { font-size: 12px; color: var(--muted); }
+  .tbl-scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 12.5px; min-width: 340px; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  th { font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); font-weight: 600; }
+  td.ver { font-family: var(--mono); font-weight: 500; }
+  td .v2 { font-family: var(--mono); font-weight: 600; font-size: 11.5px; }
+  .trig-tx { color: var(--critical); } .safe-tx { color: var(--good); }
+  .agree { color: var(--good); font-family: var(--mono); font-weight: 600; }
+  .srcrow td { color: var(--muted); font-size: 11px; border-bottom: none; padding-top: 10px; }
+
+  /* ---- downstream / layer B ---- */
+  .rooms { display: flex; flex-direction: column; gap: 10px; }
+  .room { display: flex; align-items: center; gap: 12px; padding: 11px 13px; border: 1px solid var(--border);
+    border-radius: 10px; background: var(--surface-2); }
+  .room .nm { font-family: var(--mono); font-size: 12.5px; font-weight: 500; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .room .meta { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .room .cnt { font-family: var(--mono); font-size: 11px; color: var(--faint); }
+  .st { font-family: var(--mono); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .st.patched { color: var(--good); background: var(--good-soft); }
+  .st.wontfix { color: var(--watch); background: var(--watch-soft); }
+  .st.parent { color: var(--accent); background: var(--accent-soft); }
+  .readybar { display: flex; align-items: center; gap: 10px; margin-top: 14px; padding: 11px 13px;
+    border: 1px solid color-mix(in srgb, var(--good) 35%, var(--border)); background: var(--good-soft); border-radius: 10px; }
+  .readybar .big { font-family: var(--mono); font-weight: 600; color: var(--good); font-size: 14px; }
+  .readybar .exp { font-size: 12px; color: var(--fg); }
+
+  /* ---- record / hashes ---- */
+  .hashes { display: flex; flex-direction: column; gap: 8px; }
+  .hrow { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; padding: 9px 11px; border: 1px solid var(--border); border-radius: 9px; background: var(--surface-2); }
+  .hrow .nm { font-family: var(--mono); font-size: 12px; font-weight: 500; }
+  .hrow .cnt { font-size: 11px; color: var(--muted); font-family: var(--mono); }
+  .hrow .h { grid-column: 1 / -1; font-family: var(--mono); font-size: 11px; color: var(--accent); overflow-x: auto; white-space: nowrap; }
+
+  /* ---- cast ---- */
+  .cast { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
+  .actor { border: 1px solid var(--border); border-radius: 10px; padding: 12px 13px; background: var(--surface-2); }
+  .actor .top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .actor .nm { font-family: var(--mono); font-size: 12.5px; font-weight: 600; }
+  .actor .kind { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; padding: 2px 7px; border-radius: 999px; }
+  .actor .kind.human { color: var(--accent); background: var(--accent-soft); }
+  .actor .kind.agent { color: var(--muted); background: var(--surface); border: 1px solid var(--border); }
+  .actor .role { font-size: 12px; color: var(--muted); margin-top: 7px; }
+  .actor .addr { font-size: 10.5px; color: var(--faint); margin-top: 6px; font-family: var(--mono); }
+
+  footer { margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12.5px; display: flex; flex-direction: column; gap: 6px; }
+  footer b { color: var(--fg); font-weight: 600; }
+  .src-foot { font-family: var(--mono); font-size: 11px; color: var(--faint); }
+
+  @media (max-width: 760px) {
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    .grid { grid-template-columns: 1fr; }
+    h1 { font-size: 22px; }
+  }
+  @media (prefers-reduced-motion: no-preference) { .dot { animation: pulse 2.4s ease-in-out infinite; } }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 4px var(--good-soft); } 50% { box-shadow: 0 0 0 7px transparent; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="title-block">
+      <div class="title-row"><span class="dot" aria-hidden="true"></span><h1>Embargo Control Room</h1></div>
+      <p class="sub">One Switch room ran this software vulnerability disclosure from report to published advisory — three AI agents keeping the clock, verifying patches, and drafting; two humans holding sign-off and go-to-publish.</p>
+      <div class="idchip">
+        <b>minimist</b> · <b>CVE-2021-44906</b>
+        <span class="pill pub">● PUBLISHED</span>
+        <span class="pill sev">CVSS 5.6 MEDIUM</span>
+        <span style="color:var(--faint)">affected ≤ 1.2.5 · fixed 1.2.6</span>
+      </div>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button">◑ theme</button>
+  </header>
+
+  <section class="kpis" aria-label="summary">
+    <div class="kpi good"><div class="v">PUBLISHED</div><div class="k">Case state (10 transitions)</div><div class="src">from audit record</div></div>
+    <div class="kpi"><div class="v">18<small>min</small></div><div class="k">Report → published, one session</div><div class="src">record timestamps</div></div>
+    <div class="kpi good"><div class="v">READY</div><div class="k">Downstream readiness · 3/3 resolved</div><div class="src">readiness.js</div></div>
+    <div class="kpi"><div class="v">91</div><div class="k">Audit entries, hash-chained · 4 rooms</div><div class="src">record/*.record.json</div></div>
+  </section>
+
+  <div class="grid">
+    <!-- STATE MACHINE SPINE -->
+    <section class="panel">
+      <div class="head"><h2>Disclosure timeline</h2><span class="note">every transition is a room message</span></div>
+      <div class="body">
+        <div class="tl" id="timeline"></div>
+      </div>
+    </section>
+
+    <!-- EVIDENCE / GROUNDING -->
+    <section class="panel">
+      <div class="head"><h2>Evidence</h2><span class="note">build-and-run == OSV</span></div>
+      <div class="body" id="cases"></div>
+    </section>
+
+    <!-- LAYER B -->
+    <section class="panel">
+      <div class="head"><h2>Downstream fan-out (Layer B)</h2><span class="note">one shared timekeeper, many rooms</span></div>
+      <div class="body">
+        <div class="rooms">
+          <div class="room"><span class="nm">embargo-minimist-demo</span><span class="meta"><span class="cnt">64 msgs</span><span class="st parent">PARENT · PUBLISHED</span></span></div>
+          <div class="room"><span class="nm">…downstream-rc</span><span class="meta"><span class="cnt">9 msgs</span><span class="st patched">PATCHED</span></span></div>
+          <div class="room"><span class="nm">…downstream-subarg</span><span class="meta"><span class="cnt">9 msgs</span><span class="st patched">PATCHED</span></span></div>
+          <div class="room"><span class="nm">…downstream-optimist</span><span class="meta"><span class="cnt">9 msgs</span><span class="st wontfix">WONT-FIX</span></span></div>
+        </div>
+        <div class="readybar"><span class="big">● READY</span><span class="exp">rc &amp; subarg patched, optimist unmaintained → coordinated publish is safe. Nobody publishes alone.</span></div>
+      </div>
+    </section>
+
+    <!-- VERIFIABLE RECORD -->
+    <section class="panel">
+      <div class="head"><h2>Verifiable record</h2><span class="note">tamper-evident</span></div>
+      <div class="body">
+        <div class="hashes" id="hashes"></div>
+        <p style="font-size:12px;color:var(--muted);margin:12px 0 0">Each message is hash-chained to the one before it. Change one word — rewrite repro's <span class="mono" style="color:var(--critical)">INCOMPLETE_FIX</span> as <span class="mono" style="color:var(--good)">VERIFIED_FIXED</span> — and verification fails at that exact entry.</p>
+      </div>
+    </section>
+
+    <!-- CAST -->
+    <section class="panel span-2">
+      <div class="head"><h2>The room</h2><span class="note">two humans · three agents · one shared state</span></div>
+      <div class="body">
+        <div class="cast">
+          <div class="actor"><div class="top"><span class="nm">researcher</span><span class="kind human">human</span></div><div class="role">Files the report; holds go-to-publish.</div><div class="addr">the decision that must stay human</div></div>
+          <div class="actor"><div class="top"><span class="nm">vendor</span><span class="kind human">human</span></div><div class="role">Acknowledges; ships patches; signs off.</div><div class="addr">the decision that must stay human</div></div>
+          <div class="actor"><div class="top"><span class="nm">embargo-timekeeper</span><span class="kind agent">agent</span></div><div class="role">Owns the clock &amp; state machine; runs Layer B readiness.</div><div class="addr">addressing: anyone</div></div>
+          <div class="actor"><div class="top"><span class="nm">embargo-repro</span><span class="kind agent">agent</span></div><div class="role">Builds the vendor's real commit in Docker; trusts only its own run.</div><div class="addr">addressing: owner-agents</div></div>
+          <div class="actor"><div class="top"><span class="nm">embargo-advisory</span><span class="kind agent">agent</span></div><div class="role">Drafts the advisory from room history; grounds it in OSV.</div><div class="addr">addressing: owner-agents</div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div><b>Remove Switch and this collapses</b> into disconnected bots and separate inboxes. The shared room is the mechanism — and its message history <b>is</b> the disclosure's audit record.</div>
+    <div class="src-foot">Generated from the room's verifiable audit record · all figures trace to record/*.record.json, downstream/state.json and osv.dev</div>
+  </footer>
+</div>
+
+<script>
+  const DATA = {"timeline":[{"t":"T+0:00","name":"REPORTED","by":"researcher → timekeeper","cls":"state"},{"t":"T+0:46","name":"REPRODUCED","by":"embargo-repro · built minimist 1.2.0","cls":"state","verdict":"trig"},{"t":"T+2:48","name":"REPORTED → REPRODUCED","by":"embargo-timekeeper","cls":"state"},{"t":"T+5:46","name":"VENDOR_NOTIFIED → PATCH_SUBMITTED","by":"vendor submitted v1.2.5","cls":"state"},{"t":"T+6:36","name":"INCOMPLETE_FIX","by":"embargo-repro · built v1.2.5 from source","cls":"incomplete","verdict":"trig"},{"t":"T+8:27","name":"VERIFIED_FIXED","by":"embargo-repro · built v1.2.6 from source","cls":"state","verdict":"safe"},{"t":"T+9:00","name":"PATCH_SUBMITTED → VERIFIED_FIXED","by":"embargo-timekeeper","cls":"state"},{"t":"T+12:29","name":"ADVISORY_DRAFTED","by":"embargo-advisory · grounded in OSV","cls":"state"},{"t":"T+15:07","name":"SIGNED_OFF","by":"researcher + vendor approved","cls":"state"},{"t":"T+18:08","name":"PUBLISHED","by":"researcher go-to-publish","cls":"pub"}],
+    "cases":[{"cve":"CVE-2021-44906","osv":"GHSA-xvch-5gv4-984h","vec":"Function.prototype · constructor chain · fixed 1.2.6","rows":[["1.2.0","TRIGGERED"],["1.2.5","TRIGGERED"],["1.2.6","SAFE"]]},{"cve":"CVE-2020-7598","osv":"GHSA-vh95-rmgr-6w4m","vec":"Object.prototype · __proto__ · fixed 1.2.3","rows":[["1.2.0","TRIGGERED"],["1.2.3","SAFE"],["1.2.5","SAFE"],["1.2.6","SAFE"]]}],
+    "hashes":[["embargo-minimist-demo","64 entries","f8f0152af046911278bdeab85ae7bbdf3216fdb4140e9a755abe8380ef9f2bd0"],["…downstream-rc","9 entries","fe59f3bbfcd2add8b75ec121b55acdeca82811aa0019afffe0837f5b3723138c"],["…downstream-subarg","9 entries","b1c2f576ddf58f34f02bfd5a765dd1fb0aa2868521974a1ec3993b290be65567"],["…downstream-optimist","9 entries","91dd535bef4943d4dd8d9c4131e3dde562d1c49ad77d82c746b410f17bd3f32a"]]};
+
+  const el = (t, c, h) => { const e = document.createElement(t); if (c) e.className = c; if (h != null) e.innerHTML = h; return e; };
+
+  // timeline
+  const tl = document.getElementById("timeline");
+  DATA.timeline.forEach(ev => {
+    const row = el("div", "ev " + ev.cls);
+    const vd = ev.verdict ? ` <span class="verdict ${ev.verdict}">${ev.verdict === "trig" ? "TRIGGERED" : "SAFE"}</span>` : "";
+    row.innerHTML = `<div class="t">${ev.t}</div><div class="line"><div class="state-name">${ev.name}${vd}</div><div class="by">${ev.by}</div></div>`;
+    tl.appendChild(row);
+    if (ev.cls === "incomplete") {
+      const n = el("div", "loopnote", `<b>The fix that didn't fix.</b> The vendor's v1.2.5 was built from source and the PoC still triggered — so the timekeeper <b>refused VERIFIED_FIXED</b> and held the clock. A "trust the vendor's word" process ships this to users.`);
+      tl.appendChild(n);
+    }
+  });
+
+  // cases
+  const cs = document.getElementById("cases");
+  DATA.cases.forEach(c => {
+    const box = el("div", "case");
+    const rows = c.rows.map(([v, verdict]) => {
+      const trig = verdict === "TRIGGERED";
+      const tx = trig ? "trig-tx" : "safe-tx";
+      const osv = trig ? "AFFECTED" : "not affected";
+      return `<tr><td class="ver">${v}</td><td><span class="v2 ${tx}">${verdict}</span></td><td><span class="v2 ${tx}">${osv}</span></td><td class="agree">✓</td></tr>`;
+    }).join("");
+    box.innerHTML = `<div class="ch"><span class="cve">${c.cve}</span><span class="vec">${c.vec}</span></div>
+      <div class="tbl-scroll"><table><thead><tr><th>version</th><th>build + run</th><th>OSV record</th><th>agree</th></tr></thead>
+      <tbody>${rows}</tbody><tfoot><tr class="srcrow"><td colspan="4">source: Docker build-and-run (offline) · osv.dev/${c.osv}</td></tr></tfoot></table></div>`;
+    cs.appendChild(box);
+  });
+
+  // hashes
+  const hs = document.getElementById("hashes");
+  DATA.hashes.forEach(([nm, cnt, h]) => {
+    hs.appendChild(el("div", "hrow", `<span class="nm">${nm}</span><span class="cnt">${cnt}</span><span class="h">${h}</span>`));
+  });
+
+  // theme toggle (per-viewer convenience)
+  const KEY = "embargo-theme";
+  try { const s = localStorage.getItem(KEY); if (s) document.documentElement.setAttribute("data-theme", s); } catch (e) {}
+  document.getElementById("themeBtn").addEventListener("click", () => {
+    const cur = document.documentElement.getAttribute("data-theme");
+    const dark = cur ? cur === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    const next = dark ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+  });
+</script>
