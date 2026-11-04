@@ -6,7 +6,10 @@
 set -u
 cd "$(dirname "$0")/.." || exit 2
 
-pause(){ printf '\n\033[2m— press Enter: %s —\033[0m'  "$1"; read -r _; clear; }
+# Interactive by default: press Enter to advance. Set AUTO=1 (optionally
+# AUTO_DELAY=<secs>) to auto-advance — used when recording with asciinema.
+pause(){ printf '\n\033[2m— %s —\033[0m' "$1"
+  if [ -n "${AUTO:-}" ]; then sleep "${AUTO_DELAY:-2}"; else read -r _; fi; clear; }
 title(){ printf '\033[1;36m\n=== %s ===\033[0m\n\n' "$1"; }
 
 clear
@@ -35,8 +38,11 @@ pause "BEAT 5 — the whole thing reproduces from a clean clone"
 title "npm test"
 npm test
 
-pause "BEAT 6 — bridge-agnostic: survive a Slack outage"
-title "Fail over Slack -> Mattermost; the record is portable"
+pause "BEAT 6 — bridge-agnostic: Slack is primary, survive its outage"
+title "Both bridges up — Slack is the active bridge"
+node bridge/status.js
+printf '\n\033[2m…now Slack goes down (outage or rate-limited) — fail over to Mattermost:\033[0m\n\n'
 node bridge/status.js --down slack
+printf '\n\033[2m(run with SLACK_BOT_TOKEN=xoxb-… to show the live connected Slack workspace)\033[0m\n'
 
 printf '\n\033[1;32mEnd of terminal beats.\033[0m  Cut back to the dashboard.\n\n'
