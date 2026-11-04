@@ -1,0 +1,20 @@
+{
+  "name": "embargo-room",
+  "version": "1.0.0",
+  "description": "A Switch room that runs a software vulnerability disclosure from report to public advisory: agents keep the embargo clock, verify patches against the vendor's real commits, coordinate downstreams and draft the advisory; humans hold sign-off and go-to-publish.",
+  "license": "MIT",
+  "author": "CodingwithKetan",
+  "type": "commonjs",
+  "private": true,
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "test": "bash scripts/selfcheck.sh",
+    "verify": "./verify.sh --target vulnerable && ./verify.sh --target bad-patch && ./verify.sh --target patched",
+    "verify:local": "./verify-local.sh --target vulnerable; ./verify-local.sh --target bad-patch; ./verify-local.sh --target patched",
+    "cases": "node cases/run.js cases/minimist-cve-2021-44906.json cases/minimist-cve-2020-7598.json",
+    "osv": "node osv/osv-lookup.js minimist",
+    "readiness": "node downstream/readiness.js downstream/state.example.json",
+    "record:verify": "node record/export-record.js verify record/embargo-minimist-demo.record.json",
+    "clock:demo": "node clock/clock.js init --scale 30 && node clock/clock.js notify && node clock/clock.js status"
+  }
+}

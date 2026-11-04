@@ -52,6 +52,20 @@ That is the whole thesis.
 
 ## Run it yourself
 
+### Reproduce everything in one command (no dependencies)
+
+```bash
+npm test        # or: ./scripts/selfcheck.sh
+```
+
+Pure Node built-ins — no `npm install`. The self-check runs the verified PoC arc,
+Layer B readiness, the tamper-evident record (including a tamper test), the
+embargo clock, and the repo-allowlist guard; it adds the OSV cross-check and the
+Docker case framework when a network and Docker are available, and skips them
+cleanly when not. A clean clone prints `ALL CHECKS PASS`. Individual pieces:
+`npm run verify` · `npm run cases` · `npm run osv` · `npm run readiness` ·
+`npm run record:verify` · `npm run clock:demo`.
+
 ### 1. Verify the harness (no Switch needed — ~15s)
 
 The PoC is a real prototype pollution in `minimist` (CVE-2020-7598 /
@@ -246,11 +260,22 @@ during the event. `minimist`, the CVEs and Switch itself are off-the-shelf.
 ## Layout
 
 ```
-embargo-room.template.yaml   Switch agents + room
-verify.sh / verify-local.sh  verification harness (Docker / local)
-poc/poc.js                   the proof of concept
-docker/Dockerfile.*          vulnerable (1.2.0) / bad-patch (1.2.5) / patched (1.2.6)
-demo/                        seed report + 3-minute script
-docs/architecture.md         room, state machine, handoff flow
-advisory.example.json        sample machine-readable output
+embargo-room.template.yaml        Switch: the 3 agents + parent room
+embargo-downstream.template.yaml  Switch: a Layer B child room (attaches shared agents)
+poc/poc.js                        the proof of concept (CVE-2021-44906 vector)
+verify.sh / verify-local.sh       core harness, pinned versions (Docker / local)
+verify-ref.sh / -local.sh         Layer A: build a vendor's real git ref from source
+docker/Dockerfile.*               vulnerable 1.2.0 / bad-patch 1.2.5 / patched 1.2.6 / ref / case
+cases/                            pluggable case framework + 2 real CVEs (run.js, *.json, pocs/)
+clock/clock.js                    scalable embargo clock (CLOCK_SCALE) + silence escalation
+osv/osv-lookup.js                 grounding: query the public OSV advisory database
+downstream/                       Layer B: check-dependency.js, readiness.js, manifest, state
+record/export-record.js           tamper-evident, hash-chained export of a room's history
+record/*.record.json              the real run's verifiable records (parent + 3 downstreams)
+dashboard/control-room.html       the control-room dashboard (built from the real run)
+security/repo-allowlist.txt       repos embargo-repro may build; SECURITY.md is the threat model
+scripts/selfcheck.sh              one-command reproducibility check (npm test)
+demo/                             seed report, vendor patch refs, 3-minute script
+docs/                             architecture.md, layer-b.md
+advisory.example.json             sample machine-readable advisory
 ```

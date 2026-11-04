@@ -1,0 +1,19 @@
+# Downstream coordination manifest for the minimist disclosure (live).
+# The Timekeeper iterates these on REPRODUCED, confirms each edge with
+# check-dependency.js, opens a child room per confirmed dependent, and
+# aggregates their status into readiness. Fill in real maintainer handles.
+target: minimist
+parent_room: embargo-minimist-demo
+downstreams:
+  - package: rc
+    repo: https://github.com/dominictarr/rc
+    maintainer: "{rc-handle}"
+    status: pending        # pending | notified | patched | wont-fix | unreachable
+  - package: subarg
+    repo: https://github.com/substack/subarg
+    maintainer: "{subarg-handle}"
+    status: pending
+  - package: optimist
+    repo: https://github.com/substack/node-optimist
+    maintainer: "{optimist-handle}"
+    status: pending
