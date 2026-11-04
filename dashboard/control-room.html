@@ -178,8 +178,14 @@
     .grid { grid-template-columns: 1fr; }
     h1 { font-size: 22px; }
   }
-  @media (prefers-reduced-motion: no-preference) { .dot { animation: pulse 2.4s ease-in-out infinite; } }
+  @media (prefers-reduced-motion: no-preference) {
+    .dot { animation: pulse 2.4s ease-in-out infinite; }
+    .ev.incomplete .line::before { animation: critpulse 2s ease-in-out infinite; }
+    .readybar .big { animation: goodpulse 2.8s ease-in-out infinite; }
+  }
   @keyframes pulse { 0%,100% { box-shadow: 0 0 0 4px var(--good-soft); } 50% { box-shadow: 0 0 0 7px transparent; } }
+  @keyframes critpulse { 0%,100% { box-shadow: 0 0 0 4px var(--critical-soft); } 55% { box-shadow: 0 0 0 8px transparent; } }
+  @keyframes goodpulse { 0%,100% { opacity: 1; } 50% { opacity: .72; } }
 </style>
 
 <div class="wrap">

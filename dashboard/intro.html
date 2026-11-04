@@ -1,0 +1,54 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Embargo Room Intro</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
+<style>
+  /* A full-bleed title card for the video open. Dark, terminal-ish, one quiet
+     animated accent (a scanning sheen) kept tasteful. Matches the project palette. */
+  :root{
+    --bg:#0c0f14; --panel:#12161d; --fg:#eef1f6; --muted:#9aa4b3; --faint:#6b7686;
+    --accent:#8ea2ff; --accent-2:#2dd4bf; --crit:#ff6b6b; --border:#232a35;
+    --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace; --sans:"IBM Plex Sans",system-ui,sans-serif;
+    color-scheme:dark;
+  }
+  /* this card is intentionally single-look (a dark title slide) */
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:
+      radial-gradient(1100px 520px at 50% -10%, color-mix(in srgb,var(--accent) 16%, transparent), transparent 70%),
+      var(--bg);
+    color:var(--fg);font-family:var(--sans);display:flex;min-height:100%}
+  .card{position:relative;margin:auto;width:100%;max-width:960px;
+    padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));
+    padding-block:48px;text-align:center;overflow:hidden}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  h1{margin:16px 0 0;font-size:clamp(44px,11vw,104px);font-weight:700;letter-spacing:-.03em;line-height:.98;
+    background:linear-gradient(180deg,#fff, #c7cfe0);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .rule{width:84px;height:3px;margin:22px auto;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+  .lede{max-width:58ch;margin:0 auto;color:var(--muted);font-size:clamp(15px,2.3vw,19px);line-height:1.55}
+  .lede b{color:var(--fg);font-weight:600}
+  .hook{margin-top:26px;display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:clamp(13px,2vw,16px);
+    color:var(--fg);border:1px solid var(--border);background:var(--panel);border-radius:999px;padding:9px 16px}
+  .hook .x{color:var(--crit);font-weight:600}
+  .hook .dot{width:8px;height:8px;border-radius:50%;background:var(--crit);box-shadow:0 0 0 0 color-mix(in srgb,var(--crit) 60%,transparent)}
+  .meta{margin-top:30px;font-family:var(--mono);font-size:12px;color:var(--faint);letter-spacing:.04em}
+  /* one quiet animation: a slow sheen sweeping the card */
+  .sheen{position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 40%,color-mix(in srgb,var(--accent) 9%,transparent) 50%,transparent 60%);
+    transform:translateX(-60%)}
+  @media (prefers-reduced-motion:no-preference){
+    .sheen{animation:sweep 7s ease-in-out infinite}
+    .hook .dot{animation:pulse 2.2s ease-in-out infinite}
+  }
+  @keyframes sweep{0%,100%{transform:translateX(-60%)}50%{transform:translateX(60%)}}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--crit) 55%,transparent)}70%{box-shadow:0 0 0 7px transparent}}
+</style>
+
+<div class="card">
+  <div class="sheen" aria-hidden="true"></div>
+  <div class="eyebrow">Flip the Switch · WeMakeDevs × DevTools Academy × Switch</div>
+  <h1>Embargo&nbsp;Room</h1>
+  <div class="rule"></div>
+  <p class="lede">A software vulnerability disclosure, run from report to published advisory in <b>one Switch room</b> — three AI agents verify patches and keep the embargo clock, two humans hold the decisions that must stay human.</p>
+  <div class="hook"><span class="dot" aria-hidden="true"></span>The <span class="x">fix that didn't fix</span> — caught live, from the vendor's real commit.</div>
+  <div class="meta">one room · two humans · three agents · one verifiable record</div>
+</div>
