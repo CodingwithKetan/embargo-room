@@ -1,0 +1,178 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Embargo Ops — live replay</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --bg:#0d1016; --surface:#151a22; --surface-2:#1b212b; --fg:#e7ebf2; --muted:#9aa4b3; --faint:#6b7686;
+    --border:#242b36; --border-strong:#333c49; --accent:#8ea2ff; --accent-soft:#1c2440;
+    --crit:#ff6b6b; --crit-soft:#35191b; --good:#5bc46b; --good-soft:#15291a; --warn:#e3b341; --warn-soft:#2e2510;
+    --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace; --sans:"IBM Plex Sans",system-ui,sans-serif; color-scheme:dark;
+  }
+  :root[data-theme="light"]{
+    --bg:#eef0f4; --surface:#fff; --surface-2:#f5f6f9; --fg:#191c23; --muted:#5a6471; --faint:#8a94a3;
+    --border:#e0e4ea; --border-strong:#cdd3dd; --accent:#3b5bdb; --accent-soft:#e7ebfb;
+    --crit:#d13b3b; --crit-soft:#fbe6e6; --good:#2b8a3e; --good-soft:#e4f3e7; --warn:#b8860b; --warn-soft:#f6eed6; color-scheme:light;
+  }
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.5}
+  .wrap{max-width:1180px;margin:0 auto;padding:22px 16px 56px}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  h1{margin:0;font-size:22px;font-weight:700;letter-spacing:-.01em}
+  .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  header{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid var(--border)}
+  .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  button,select,a.link{font-family:var(--mono);font-size:12px;color:var(--fg);background:var(--surface);border:1px solid var(--border-strong);border-radius:8px;padding:8px 13px;cursor:pointer;text-decoration:none}
+  button:hover,a.link:hover{border-color:var(--accent)} button.primary{background:var(--accent);border-color:var(--accent);color:#0d1016;font-weight:600}
+  button:disabled{opacity:.5;cursor:default}
+
+  /* state machine ribbon */
+  .ribbon{display:flex;flex-wrap:wrap;gap:6px;margin:18px 0}
+  .st{font-family:var(--mono);font-size:11px;padding:5px 10px;border-radius:7px;border:1px solid var(--border);color:var(--faint);background:var(--surface);white-space:nowrap}
+  .st.done{color:var(--good);border-color:color-mix(in srgb,var(--good) 40%,transparent);background:var(--good-soft)}
+  .st.cur{color:var(--fg);border-color:var(--accent);background:var(--accent-soft);box-shadow:0 0 0 2px var(--accent-soft)}
+  .st.crit{color:var(--crit);border-color:color-mix(in srgb,var(--crit) 45%,transparent);background:var(--crit-soft)}
+
+  .stage{display:grid;grid-template-columns:1.25fr .75fr;gap:16px;align-items:start}
+  @media (max-width:800px){.stage{grid-template-columns:1fr}}
+
+  /* agent cards */
+  .agents{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .agent{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:15px;overflow:hidden;transition:border-color .2s,transform .2s,opacity .3s}
+  .agent.idle{opacity:.5}
+  .agent.working{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 6px 22px rgba(0,0,0,.35);transform:translateY(-2px)}
+  .agent.working.crit{border-color:var(--crit);box-shadow:0 0 0 1px var(--crit),0 6px 22px rgba(0,0,0,.35)}
+  .agent.working.good{border-color:var(--good);box-shadow:0 0 0 1px var(--good),0 6px 22px rgba(0,0,0,.35)}
+  .rowtop{display:flex;align-items:center;gap:10px}
+  .av{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:13px;color:#fff;flex:none}
+  .av.tk{background:#3b5bdb} .av.repro{background:#c2410c} .av.adv{background:#7c3aed} .av.watch{background:#0e7490} .av.human{background:#2b8a3e}
+  .agent h3{margin:0;font-size:14px} .agent .role{font-size:11px;color:var(--muted)}
+  .status{margin-left:auto;display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;color:var(--faint)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--faint)}
+  .working .dot{background:var(--accent);animation:pulse 1s infinite} .working.crit .dot{background:var(--crit)} .working.good .dot{background:var(--good)}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 currentColor;opacity:1}50%{box-shadow:0 0 0 5px transparent;opacity:.55}}
+  .action{margin-top:11px;min-height:38px;font-size:13px;color:var(--fg)}
+  .action .badge{display:inline-block;font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;padding:1px 6px;border-radius:5px;margin-bottom:4px}
+  .badge.crit{color:var(--crit);background:var(--crit-soft)} .badge.good{color:var(--good);background:var(--good-soft)}
+  .badge.warn{color:var(--warn);background:var(--warn-soft)} .badge.info{color:var(--accent);background:var(--accent-soft)}
+  .idle .action{color:var(--faint)}
+  .spinner{display:none;width:13px;height:13px;border:2px solid var(--border-strong);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+  .working .spinner{display:inline-block}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* feed */
+  .feed{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+  .feed .h{padding:12px 15px;border-bottom:1px solid var(--border);font-size:13px;font-weight:600;display:flex;justify-content:space-between;align-items:baseline}
+  .feed .h .mono{color:var(--faint);font-size:11px}
+  .log{padding:6px 0;max-height:460px;overflow:auto}
+  .le{display:grid;grid-template-columns:48px 1fr;gap:9px;padding:5px 15px;font-size:12.5px;opacity:0;animation:in .25s forwards}
+  @keyframes in{to{opacity:1}}
+  .le .t{font-family:var(--mono);font-size:10.5px;color:var(--faint)}
+  .le .who{font-weight:600} .le .who.repro{color:#e3853f} .le .who.tk{color:var(--accent)} .le .who.adv{color:#a78bfa} .le .who.human{color:var(--good)}
+  .le .msg{color:var(--muted)} .le.crit .msg{color:var(--crit)} .le.good .msg{color:var(--good)}
+
+  .bar{height:4px;background:var(--border);border-radius:3px;margin:16px 0 4px;overflow:hidden}
+  .bar>span{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--faint)}
+  .foot{margin-top:16px;color:var(--faint);font-size:11.5px;font-family:var(--mono);text-align:center}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">Embargo Room · live replay</div>
+      <h1>Operations — agents at work</h1>
+    </div>
+    <div class="controls">
+      <button id="play" class="primary">▶ Play</button>
+      <select id="speed" title="speed"><option value="1">1×</option><option value="2" selected>2×</option><option value="4">4×</option></select>
+      <button id="restart" title="restart">↺</button>
+      <a class="link" href="/desk">desk</a><a class="link" href="/">dashboard</a>
+      <button id="theme">◐</button>
+    </div>
+  </header>
+
+  <div class="ribbon" id="ribbon"></div>
+
+  <div class="bar"><span id="prog"></span></div>
+  <div class="meta"><span id="clock">—</span><span id="counter">0 / 0 events</span></div>
+
+  <div class="stage" style="margin-top:14px">
+    <div class="agents" id="agents"></div>
+    <div class="feed"><div class="h"><span>Live activity</span><span class="mono" id="src">—</span></div><div class="log" id="log"></div></div>
+  </div>
+  <div class="foot">Replaying the room's real recorded events — one agent works at a time, the rest wait. Source of truth: record/*.record.json.</div>
+</div>
+
+<script>
+  const $=(id)=>document.getElementById(id);
+  const esc=(s)=>String(s==null?"":s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+  const STATES=["REPORTED","REPRODUCED","VENDOR_NOTIFIED","PATCH_SUBMITTED","VERIFIED_FIXED","ADVISORY_DRAFTED","SIGNED_OFF","PUBLISHED"];
+  const AVCLASS={"embargo-timekeeper":"tk","embargo-repro":"repro","embargo-advisory":"adv","embargo-watch":"watch","user":"human"};
+  const SHORT={"embargo-timekeeper":"TK","embargo-repro":"RP","embargo-advisory":"AD","embargo-watch":"WT","user":"HU"};
+  let events=[], idx=0, timer=null, lanes=[];
+
+  function hhmm(ts){ try{return new Date(ts).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});}catch{return"";} }
+  const sevClass=(s)=> s==="crit"?"crit":(s==="good"?"good":(s==="warn"?"warn":"info"));
+
+  function renderRibbon(){ $("ribbon").innerHTML = STATES.map(s=>`<span class="st" data-s="${s}">${s}</span>`).join('<span class="st" style="border:0;background:none;color:var(--faint)">→</span>'); }
+  function markState(name){
+    for(const el of document.querySelectorAll('.st[data-s]')){
+      const s=el.dataset.s; const reached=STATES.indexOf(s)<=STATES.indexOf(name);
+      el.className="st"+(s===name?" cur":(reached?" done":""));
+    }
+  }
+  function renderAgents(){
+    $("agents").innerHTML = lanes.map(l=>{
+      const cls=AVCLASS[l.id]||"human";
+      return `<div class="agent idle" id="a-${cls}" data-id="${l.id}">
+        <div class="rowtop"><span class="av ${cls}">${SHORT[l.id]||l.name.slice(0,2).toUpperCase()}</span>
+        <div><h3>${esc(l.name)}</h3><div class="role">${esc(l.blurb||l.role)}</div></div>
+        <div class="status"><span class="spinner"></span><span class="lbl">idle</span><span class="dot"></span></div></div>
+        <div class="action">waiting…</div></div>`;
+    }).join("");
+  }
+  function setActive(ev){
+    for(const el of document.querySelectorAll('.agent')){ el.className="agent idle"; el.querySelector('.lbl').textContent="idle"; }
+    const cls=AVCLASS[ev.agentId]||"human";
+    const card=$("a-"+cls); if(!card) return;
+    const sev=sevClass(ev.sev);
+    card.className="agent working "+(sev==="crit"?"crit":(sev==="good"?"good":""));
+    card.querySelector('.lbl').textContent="working";
+    card.querySelector('.action').innerHTML=(ev.status?`<span class="badge ${sev}">${esc(ev.status)}</span><br>`:"")+esc(ev.label);
+  }
+  function appendLog(ev){
+    const cls=AVCLASS[ev.agentId]||"human"; const sev=sevClass(ev.sev);
+    const row=document.createElement("div");
+    row.className="le "+(sev==="crit"?"crit":(sev==="good"?"good":""));
+    row.innerHTML=`<span class="t">${hhmm(ev.ts)}</span><span><span class="who ${cls}">${esc(ev.agentName)}</span> <span class="msg">${esc(ev.label)}</span></span>`;
+    $("log").appendChild(row); $("log").scrollTop=$("log").scrollHeight;
+  }
+  function step(){
+    if(idx>=events.length){ stop(); $("play").textContent="✓ Done"; for(const el of document.querySelectorAll('.agent')){el.className="agent idle";el.querySelector('.lbl').textContent="idle";} return; }
+    const ev=events[idx++];
+    setActive(ev); appendLog(ev);
+    const st=STATES.find(s=>new RegExp(s).test((ev.status||"")+" "+(ev.label||""))); if(st) markState(st);
+    $("prog").style.width=(idx/events.length*100)+"%";
+    $("clock").textContent=hhmm(ev.ts); $("counter").textContent=`${idx} / ${events.length} events`;
+  }
+  function play(){ if(idx>=events.length) restart(); const iv=900/Number($("speed").value); timer=setInterval(step, iv); $("play").textContent="⏸ Pause"; $("play").onclick=pause; }
+  function pause(){ stop(); $("play").textContent="▶ Play"; $("play").onclick=play; }
+  function stop(){ if(timer){clearInterval(timer);timer=null;} }
+  function restart(){ stop(); idx=0; $("log").innerHTML=""; $("prog").style.width="0"; renderAgents(); renderRibbon(); $("play").textContent="▶ Play"; $("play").onclick=play; $("counter").textContent=`0 / ${events.length} events`; }
+
+  async function init(){
+    let q="src=record&record=embargo-minimist-demo.record.json";
+    try{ const s=await fetch("/api/sources").then(r=>r.json()); if(s.live) q="src=live"; }catch(e){}
+    const m=await fetch("/api/activity?"+q).then(r=>r.json());
+    $("src").textContent=m.source||"";
+    lanes=m.lanes;
+    events=m.lanes.flatMap(l=>l.tasks.filter(t=>t.status).map(t=>({agentId:l.id,agentName:l.name,role:l.role,...t})))
+      .sort((a,b)=>new Date(a.ts)-new Date(b.ts));
+    renderRibbon(); renderAgents(); $("counter").textContent=`0 / ${events.length} events`;
+    $("play").onclick=play; $("restart").onclick=restart; $("speed").onchange=()=>{ if(timer){stop();play();} };
+    $("theme").onclick=()=>{const r=document.documentElement;r.setAttribute("data-theme",r.getAttribute("data-theme")==="light"?"dark":"light");};
+  }
+  init();
+</script>

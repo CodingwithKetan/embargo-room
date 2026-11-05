@@ -80,7 +80,7 @@ Every capability, and where it's documented:
 | Audit record | Tamper-evident, hash-chained export | this doc, above |
 | Security | Threat model, repo allowlist, sandbox, runnable red-team | [../SECURITY.md](../SECURITY.md) |
 | Bridge layer | Bridge-agnostic failover (Slack ⇄ Mattermost) | [bridges.md](bridges.md) |
-| Activity dashboard | Local web view: which agent did what, status, failures | [dashboard.md](dashboard.md) |
+| Activity dashboard | Local web view: which agent did what, status, failures (+ `/ops` replay) | [dashboard.md](dashboard.md) |
 | Disclosure scorecard | SLA/KPIs from the record: cycle time, incomplete fixes caught, grade | [scorecard.md](scorecard.md) |
 | Agent cost tracker | Estimated LLM + infra cost attributed per agent, per disclosure | [cost.md](cost.md) |
 | Security desk | Portfolio view: the whole program — monitoring, disclosures, downstreams | [portfolio.md](portfolio.md) |

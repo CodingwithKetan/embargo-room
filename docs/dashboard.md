@@ -34,3 +34,14 @@ The model is built by `dashboard/activity.js` (also a CLI:
 `node dashboard/activity.js <record.json>` prints the JSON). Parsing keys off the
 agents' own posted verdicts, so the dashboard reflects the room's real history,
 not a separate hand-maintained status.
+
+## Three views (same server)
+
+Once `npm run dashboard` is running:
+
+- **`/`** — activity dashboard (scorecard + cost strips, agent lanes, failures).
+- **`/ops`** — **live ops replay**: the real disclosure plays back as an
+  operations board. One agent "works" at a time (pulsing, with its current
+  action), the rest sit idle, and the state machine advances to PUBLISHED. Press
+  **Play**. It's the most dynamic screen for a demo — "agents at work."
+- **`/desk`** — the [security desk](portfolio.md): the whole program in one queue.

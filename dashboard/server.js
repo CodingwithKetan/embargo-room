@@ -43,6 +43,9 @@ const server = http.createServer(async (req, res) => {
     if (url.pathname === "/desk" || url.pathname === "/desk.html") {
       return send(res, 200, fs.readFileSync(path.join(DIR, "desk.html")), "text/html; charset=utf-8");
     }
+    if (url.pathname === "/ops" || url.pathname === "/ops.html") {
+      return send(res, 200, fs.readFileSync(path.join(DIR, "ops.html")), "text/html; charset=utf-8");
+    }
     if (url.pathname === "/api/portfolio") {
       return send(res, 200, JSON.stringify(buildPortfolio()));
     }

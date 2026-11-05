@@ -11,6 +11,7 @@ agents go idle. Target ~3:00–3:15, one continuous take.
 - **B — the control-room dashboard**, `dashboard/control-room.html`, open full-screen.
 - **C — a terminal** at the repo root, running `demo/terminal-beats.sh` (one keystroke per beat).
 - **D — the local activity dashboard**, `npm run dashboard` → `http://localhost:7070` (per-agent lanes + failures).
+- **E — the ops replay**, `http://localhost:7070/ops` — the "agents at work" animation (Play it on camera).
 
 ## Run-of-show
 
@@ -28,6 +29,14 @@ agents go idle. Target ~3:00–3:15, one continuous take.
 
 Never cut: the **INCOMPLETE_FIX** beat (#3) or the **prevent-hack** beat (#6). The
 local-dashboard beat (#5) is the first trim for a strict 3:00.
+
+**Best "wow" visual — the ops replay (`/ops`).** For a dynamic cold open or a
+~12s cut after the room arc, screen **E**: hit **Play** and let the operations
+board animate the real disclosure — the active agent pulses with its current
+action, the others sit idle, hand-offs light up, and the state machine marches to
+PUBLISHED. VO: *"Watch it run: one agent works at a time — reproduce, verify,
+draft — while the rest wait, and the embargo advances. This is the whole
+coordination, as it actually happened."* Set speed 2×; it finishes in ~15s.
 
 **Strong optional framing — the Security Desk (`/desk`).** For the biggest
 "business workflow" impression, open *or* close on the portfolio desk

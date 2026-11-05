@@ -53,6 +53,7 @@ A full **A → B → C → D** pipeline, plus the operational layers around it:
 - **Formal disclosure report:** the printable one-pager a business files (legal / CNA / exec) — timeline, evidence, sign-offs, scorecard, and the record hash as a tamper-evident signature (`npm run report`).
 - **Per-agent cost tracker:** Switch is "one agent, many rooms," so cost attribution per agent is the natural governance question — this attributes estimated LLM + infrastructure cost to each agent, per disclosure (`npm run cost`), ready to swap in real token telemetry.
 - **Security desk (portfolio):** the whole program in one queue — what's monitored, every disclosure with its SLA grade and cost, and downstream coordination against the deadline (`npm run portfolio`, or `/desk`). It reframes the project from "a tool for one bug" to "the desk a security team runs."
+- **Live ops replay (`/ops`):** the real disclosure played back as an operations board — one agent works at a time (pulsing, with its current action), the rest idle, and the state machine advancing to PUBLISHED. The "agents at work" view, driven entirely by the recorded events.
 
 Proof it's real: two actual CVEs (CVE-2021-44906, CVE-2020-7598), real Docker builds of real vendor commits, OSV cross-checks, and a clean-clone self-check that prints `ALL CHECKS PASS` (18/18) with **zero dependencies**.
 
