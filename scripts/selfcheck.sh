@@ -45,6 +45,9 @@ rptdir="$(mktemp -d)"; node publish/report.js --out "$rptdir/r.html" >/dev/null 
 echo "== Scorecard: SLA/KPIs compute from a record =="
 node scorecard/scorecard.js --json 2>/dev/null | grep -q '"grade": "MEETS SLA"' && ok "scorecard grades the disclosure (MEETS SLA)" || no "scorecard failed"
 
+echo "== Agent cost tracker: per-agent cost attributes =="
+node cost/cost-tracker.js --json 2>/dev/null | grep -q '"costPerDisclosure"' && ok "cost tracker attributes cost per agent" || no "cost tracker failed"
+
 echo "== Activity dashboard: model builds from a record =="
 node dashboard/activity.js record/embargo-minimist-demo.record.json 2>/dev/null | grep -q '"currentState": "PUBLISHED"' && ok "activity model builds (lanes + failures)" || no "activity model failed"
 

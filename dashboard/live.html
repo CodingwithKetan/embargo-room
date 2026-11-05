@@ -119,6 +119,7 @@
   </div>
 
   <div class="scorecard" id="scorecard"></div>
+  <div class="scorecard" id="cost"></div>
   <div class="fails" id="fails"></div>
   <div class="lanes" id="lanes"></div>
   <div class="foot" id="foot"></div>
@@ -149,6 +150,17 @@
       + cell(m.attestation, "attestation")
       + cell(m.daysBeforeDeadline!=null ? m.daysBeforeDeadline+"d early" : (m.deadlineMet?"met":"—"), "vs embargo deadline")
       + `</div>`;
+  }
+
+  function renderCost(c){
+    if (!c || c.error){ $("cost").innerHTML=""; return; }
+    const cell = (a) => `<div class="sc"><div class="v">$${a.total.toFixed(2)}</div>`
+      + `<div class="k">${esc(a.name)} · ${a.turns} turns${a.verifies?` · ${a.verifies} builds`:""}</div></div>`;
+    $("cost").innerHTML =
+      `<div class="h"><h2>Agent cost tracker — $${c.costPerDisclosure.toFixed(2)} / disclosure`
+      + ` <span style="font-weight:400;color:var(--faint)">(${esc(c.model)})</span></h2>`
+      + `<span class="grade wip">ESTIMATE</span></div>`
+      + `<div class="sc-grid">${c.agents.map(cell).join("")}</div>`;
   }
 
   async function loadSources(){
@@ -201,7 +213,9 @@
       const recParam = v.startsWith("record:") ? "?record=" + encodeURIComponent(v.slice(7)) : "";
       const sc = await fetch("/api/scorecard" + recParam).then(r=>r.json());
       renderScorecard(sc);
-    } catch(e){ $("scorecard").innerHTML = ""; }
+      const c = await fetch("/api/cost" + recParam).then(r=>r.json());
+      renderCost(c);
+    } catch(e){ $("scorecard").innerHTML = ""; $("cost").innerHTML = ""; }
 
     // lanes
     $("lanes").innerHTML = m.lanes.map(l=>{

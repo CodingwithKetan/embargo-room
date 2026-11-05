@@ -82,6 +82,8 @@ Every capability, and where it's documented:
 | Bridge layer | Bridge-agnostic failover (Slack ⇄ Mattermost) | [bridges.md](bridges.md) |
 | Activity dashboard | Local web view: which agent did what, status, failures | [dashboard.md](dashboard.md) |
 | Disclosure scorecard | SLA/KPIs from the record: cycle time, incomplete fixes caught, grade | [scorecard.md](scorecard.md) |
+| Agent cost tracker | Estimated LLM + infra cost attributed per agent, per disclosure | [cost.md](cost.md) |
+| Disclosure report | The printable report a business files (timeline, evidence, sign-offs, signature) | [scorecard.md](scorecard.md) · `npm run report` |
 
 The pipeline is **A → B → C → D**: verify the upstream fix, coordinate the
 downstreams, publish the standard advisory, and attest that the agent did the

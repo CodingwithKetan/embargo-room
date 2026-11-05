@@ -1,0 +1,13 @@
+{
+  "_doc": "Transparent rate card for the agent cost tracker. Costs are ESTIMATED from recorded activity (turns per agent + verification runs) using these averages. In a real Switch deployment, replace the per-turn averages with the provider's actual token telemetry for exact figures — the tracker's shape stays the same.",
+  "currency": "USD",
+  "model": "claude (estimate)",
+  "price_per_1k_input_usd": 0.003,
+  "price_per_1k_output_usd": 0.015,
+  "avg_input_tokens_per_turn": 1800,
+  "avg_output_tokens_per_turn": 350,
+  "docker_build": {
+    "est_minutes_per_verify": 1.5,
+    "usd_per_minute": 0.01
+  }
+}
