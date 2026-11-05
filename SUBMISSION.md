@@ -50,6 +50,7 @@ A full **A → B → C → D** pipeline, plus the operational layers around it:
 - **Tamper-evident record:** the room's history is a hash chain; change one word and verification breaks at that entry. The head hash is the citable fingerprint of the whole disclosure.
 - **Local activity dashboard:** which agent did what, current status, and the failures it caught.
 - **Disclosure scorecard (SLAs/KPIs):** cycle time, patch cycles, incomplete fixes caught, downstream coverage, and an SLA grade — computed from the record, because a business process is managed by its numbers.
+- **Formal disclosure report:** the printable one-pager a business files (legal / CNA / exec) — timeline, evidence, sign-offs, scorecard, and the record hash as a tamper-evident signature (`npm run report`).
 
 Proof it's real: two actual CVEs (CVE-2021-44906, CVE-2020-7598), real Docker builds of real vendor commits, OSV cross-checks, and a clean-clone self-check that prints `ALL CHECKS PASS` (18/18) with **zero dependencies**.
 

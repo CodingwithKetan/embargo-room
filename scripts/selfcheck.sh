@@ -39,6 +39,9 @@ node assure/verify-work.js --against record/embargo-minimist-demo.record.json >/
 echo "== Embargo clock =="
 node clock/clock.js init --scale 30 >/dev/null 2>&1 && node clock/clock.js status >/dev/null 2>&1 && ok "clock init + status" || no "clock failed"
 
+echo "== Disclosure report: formal HTML emits =="
+rptdir="$(mktemp -d)"; node publish/report.js --out "$rptdir/r.html" >/dev/null 2>&1 && grep -q "Tamper-evident" "$rptdir/r.html" && ok "formal disclosure report emits (signed by record hash)" || no "report emit failed"; rm -rf "$rptdir"
+
 echo "== Scorecard: SLA/KPIs compute from a record =="
 node scorecard/scorecard.js --json 2>/dev/null | grep -q '"grade": "MEETS SLA"' && ok "scorecard grades the disclosure (MEETS SLA)" || no "scorecard failed"
 

@@ -1,18 +1,29 @@
 # Embargo Room
 
-**A Switch room that runs a software vulnerability disclosure from report to
-public advisory — with AI agents doing the clock-keeping, the verification and
-the drafting, and humans holding the two decisions that must stay human: the
-vendor's sign-off and the researcher's go-to-publish.**
+> **In security, the patch usually exists. What breaks is the choreography between
+> parties who don't trust each other — and the "fix" often doesn't fix.**
+
+Embargo Room runs a full software vulnerability disclosure — **report → public
+advisory** — inside **one Switch room**: AI agents keep the embargo clock,
+reproduce the bug, and verify the vendor's *actual commit*; humans hold the only
+two decisions that must stay human — the vendor's sign-off and the researcher's
+go-to-publish.
 
 Built for the Flip the Switch hackathon (WeMakeDevs × DevTools Academy ×
-Switch). Track 1: Best Business Workflow.
+Switch). **Track 1: Best Business Workflow.**
 
-> **Watch the 3-minute demo:** _(video link added on submission — run-of-show in [`demo/record-live.md`](demo/record-live.md), word-for-word script in [`demo/narration.md`](demo/narration.md))_
-> **Live control room:** a one-screen view of the real run — state machine, two-source
-> patch verification, downstream readiness, and the tamper-evident record — in
-> [`dashboard/control-room.html`](dashboard/control-room.html) (every figure traces to
-> `record/*.record.json`, `downstream/state.json` and osv.dev).
+**Prove it's real in ~15 seconds — zero dependencies, runs from a clean clone:**
+
+```bash
+npm test     # → ALL CHECKS PASS (19/19): real Docker builds, OSV cross-checks, tamper-evident record
+```
+
+**See it:**
+- 🎥 **3-min demo** — _(video link on submission)_ · run-of-show [`demo/record-live.md`](demo/record-live.md), word-for-word script [`demo/narration.md`](demo/narration.md)
+- 📊 **Control room** [`dashboard/control-room.html`](dashboard/control-room.html) · **live activity dashboard** `npm run dashboard`
+- 🧾 **Business outputs:** `npm run scorecard` (SLA/KPIs) · `npm run report` (the formal disclosure report a business files)
+- 📄 **Judge's pitch:** [`SUBMISSION.md`](SUBMISSION.md)
+> Every figure traces to `record/*.record.json`, `downstream/state.json` and osv.dev — nothing is hand-maintained.
 
 ## The problem
 
