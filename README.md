@@ -20,7 +20,7 @@ npm test     # → ALL CHECKS PASS (19/19): real Docker builds, OSV cross-checks
 
 **See it:**
 - 🎥 **3-min demo** — _(video link on submission)_ · run-of-show [`demo/record-live.md`](demo/record-live.md), word-for-word script [`demo/narration.md`](demo/narration.md)
-- 📊 **Control room** [`dashboard/control-room.html`](dashboard/control-room.html) · **live activity dashboard** `npm run dashboard`
+- 📊 **Control room** [`dashboard/control-room.html`](dashboard/control-room.html) · **live activity dashboard** `npm run dashboard` · **security desk** (portfolio) `npm run portfolio` / `/desk`
 - 🧾 **Business outputs:** `npm run scorecard` (SLA/KPIs) · `npm run report` (the formal disclosure report a business files)
 - 📄 **Judge's pitch:** [`SUBMISSION.md`](SUBMISSION.md)
 > Every figure traces to `record/*.record.json`, `downstream/state.json` and osv.dev — nothing is hand-maintained.

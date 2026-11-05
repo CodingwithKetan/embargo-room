@@ -83,6 +83,7 @@ Every capability, and where it's documented:
 | Activity dashboard | Local web view: which agent did what, status, failures | [dashboard.md](dashboard.md) |
 | Disclosure scorecard | SLA/KPIs from the record: cycle time, incomplete fixes caught, grade | [scorecard.md](scorecard.md) |
 | Agent cost tracker | Estimated LLM + infra cost attributed per agent, per disclosure | [cost.md](cost.md) |
+| Security desk | Portfolio view: the whole program — monitoring, disclosures, downstreams | [portfolio.md](portfolio.md) |
 | Disclosure report | The printable report a business files (timeline, evidence, sign-offs, signature) | [scorecard.md](scorecard.md) · `npm run report` |
 
 The pipeline is **A → B → C → D**: verify the upstream fix, coordinate the

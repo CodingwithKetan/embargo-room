@@ -29,6 +29,14 @@ agents go idle. Target ~3:00–3:15, one continuous take.
 Never cut: the **INCOMPLETE_FIX** beat (#3) or the **prevent-hack** beat (#6). The
 local-dashboard beat (#5) is the first trim for a strict 3:00.
 
+**Strong optional framing — the Security Desk (`/desk`).** For the biggest
+"business workflow" impression, open *or* close on the portfolio desk
+(`npm run portfolio` → `http://localhost:7070/desk`): monitoring radar → the
+disclosure with its SLA grade and cost → downstream coordination. VO: *"Zoom out:
+this isn't one bug, it's the desk a security team runs — what's watched, every
+disclosure graded against its SLA and costed, and every downstream tracked to the
+deadline."* It reframes everything the judge just saw as one managed program.
+
 To set up screen **D** before recording: `MM_TOKEN=<token> MM_CHANNEL=n9mgu4i143yxxqmu5cz9bb65dc npm run dashboard`,
 open `localhost:7070`, pick **LIVE — embargo-minimist-live**, dark theme.
 

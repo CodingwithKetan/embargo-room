@@ -13,6 +13,7 @@ const path = require("path");
 const { fromRecord, fromLive } = require("./activity");
 const { buildScorecard } = require("../scorecard/scorecard");
 const { buildCostReport } = require("../cost/cost-tracker");
+const { buildPortfolio } = require("../portfolio/portfolio");
 
 const PORT = Number(process.env.PORT || 7070);
 const DIR = __dirname;
@@ -38,6 +39,12 @@ const server = http.createServer(async (req, res) => {
   try {
     if (url.pathname === "/" || url.pathname === "/index.html") {
       return send(res, 200, fs.readFileSync(path.join(DIR, "live.html")), "text/html; charset=utf-8");
+    }
+    if (url.pathname === "/desk" || url.pathname === "/desk.html") {
+      return send(res, 200, fs.readFileSync(path.join(DIR, "desk.html")), "text/html; charset=utf-8");
+    }
+    if (url.pathname === "/api/portfolio") {
+      return send(res, 200, JSON.stringify(buildPortfolio()));
     }
     if (url.pathname === "/api/sources") {
       return send(res, 200, JSON.stringify({

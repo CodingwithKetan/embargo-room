@@ -24,6 +24,7 @@
     "scorecard": "node scorecard/scorecard.js",
     "report": "node publish/report.js",
     "cost": "node cost/cost-tracker.js",
+    "portfolio": "node portfolio/portfolio.js",
     "bridge": "node bridge/status.js",
     "clock:demo": "node clock/clock.js init --scale 30 && node clock/clock.js notify && node clock/clock.js status"
   }
