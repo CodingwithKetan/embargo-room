@@ -39,6 +39,9 @@ node assure/verify-work.js --against record/embargo-minimist-demo.record.json >/
 echo "== Embargo clock =="
 node clock/clock.js init --scale 30 >/dev/null 2>&1 && node clock/clock.js status >/dev/null 2>&1 && ok "clock init + status" || no "clock failed"
 
+echo "== Scorecard: SLA/KPIs compute from a record =="
+node scorecard/scorecard.js --json 2>/dev/null | grep -q '"grade": "MEETS SLA"' && ok "scorecard grades the disclosure (MEETS SLA)" || no "scorecard failed"
+
 echo "== Activity dashboard: model builds from a record =="
 node dashboard/activity.js record/embargo-minimist-demo.record.json 2>/dev/null | grep -q '"currentState": "PUBLISHED"' && ok "activity model builds (lanes + failures)" || no "activity model failed"
 

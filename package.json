@@ -21,6 +21,7 @@
     "assure": "node assure/verify-work.js --against record/embargo-minimist-demo.record.json",
     "redteam": "bash security/redteam/redteam.sh",
     "dashboard": "node dashboard/server.js",
+    "scorecard": "node scorecard/scorecard.js",
     "bridge": "node bridge/status.js",
     "clock:demo": "node clock/clock.js init --scale 30 && node clock/clock.js notify && node clock/clock.js status"
   }

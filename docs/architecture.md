@@ -81,6 +81,7 @@ Every capability, and where it's documented:
 | Security | Threat model, repo allowlist, sandbox, runnable red-team | [../SECURITY.md](../SECURITY.md) |
 | Bridge layer | Bridge-agnostic failover (Slack ⇄ Mattermost) | [bridges.md](bridges.md) |
 | Activity dashboard | Local web view: which agent did what, status, failures | [dashboard.md](dashboard.md) |
+| Disclosure scorecard | SLA/KPIs from the record: cycle time, incomplete fixes caught, grade | [scorecard.md](scorecard.md) |
 
 The pipeline is **A → B → C → D**: verify the upstream fix, coordinate the
 downstreams, publish the standard advisory, and attest that the agent did the

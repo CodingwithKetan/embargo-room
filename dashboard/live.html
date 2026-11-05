@@ -48,6 +48,18 @@
   .kpi.state .v{font-size:18px}
   .kpi.good .v{color:var(--good)} .kpi.crit .v{color:var(--crit)}
 
+  /* scorecard strip */
+  .scorecard{background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);
+    margin-bottom:16px;overflow:hidden}
+  .scorecard .h{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 16px;border-bottom:1px solid var(--border)}
+  .scorecard .h h2{font-size:14px} .grade{font-family:var(--mono);font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px}
+  .grade.ok{color:var(--good);background:var(--good-soft)} .grade.bad{color:var(--crit);background:var(--crit-soft)}
+  .grade.wip{color:var(--warn);background:var(--warn-soft)}
+  .sc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:1px;background:var(--border)}
+  .sc{background:var(--surface);padding:11px 14px}
+  .sc .v{font-family:var(--mono);font-size:17px;font-weight:600;letter-spacing:-.01em}
+  .sc .v.crit{color:var(--crit)} .sc .k{font-size:11px;color:var(--muted);margin-top:2px}
+
   /* failures panel */
   .fails{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--crit);
     border-radius:12px;box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
@@ -106,6 +118,7 @@
     <div class="kpi"><div class="v" id="k-states">—</div><div class="k">state transitions</div></div>
   </div>
 
+  <div class="scorecard" id="scorecard"></div>
   <div class="fails" id="fails"></div>
   <div class="lanes" id="lanes"></div>
   <div class="foot" id="foot"></div>
@@ -117,6 +130,26 @@
 
   function hhmm(ts){ try{ return new Date(ts).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}); }catch{ return ""; } }
   function esc(s){ return (s||"").replace(/[&<>]/g, c=>({ "&":"&amp;","<":"&lt;",">":"&gt;" }[c])); }
+
+  function renderScorecard(sc){
+    if (!sc || sc.error){ $("scorecard").innerHTML=""; return; }
+    const m = sc.metrics;
+    const gradeClass = sc.grade==="MEETS SLA" ? "ok" : (sc.grade==="IN PROGRESS" ? "wip" : "bad");
+    const cell = (v, k, crit) => `<div class="sc"><div class="v ${crit?"crit":""}">${esc(String(v))}</div><div class="k">${esc(k)}</div></div>`;
+    $("scorecard").innerHTML =
+      `<div class="h"><h2>Disclosure scorecard — ${esc(sc.advisory||sc.record)}</h2>`
+      + `<span class="grade ${gradeClass}">${esc(sc.grade)}</span></div>`
+      + `<div class="sc-grid">`
+      + cell(m.timeToReproduce, "time to reproduce")
+      + cell(m.timeToVerifiedFix, "time to verified fix")
+      + cell(m.totalCycleTime, "total cycle time")
+      + cell(m.patchCycles, "patch cycles")
+      + cell(m.incompleteFixesCaught, "incomplete fixes caught", m.incompleteFixesCaught>0)
+      + cell(m.downstream, "downstreams")
+      + cell(m.attestation, "attestation")
+      + cell(m.daysBeforeDeadline!=null ? m.daysBeforeDeadline+"d early" : (m.deadlineMet?"met":"—"), "vs embargo deadline")
+      + `</div>`;
+  }
 
   async function loadSources(){
     const s = await fetch("/api/sources").then(r=>r.json());
@@ -161,6 +194,14 @@
           `<li><span class="t">${hhmm(f.ts)}</span><span><span class="badge ${f.sev==="crit"?"crit":"warn"}">${esc(f.status)}</span></span>`
           + `<span>${esc(f.author)} — ${esc(f.label)}</span></li>`).join("") + "</ul>";
     }
+
+    // scorecard (SLA/KPIs) — from the matching committed record
+    try {
+      const v = $("src").value || "";
+      const recParam = v.startsWith("record:") ? "?record=" + encodeURIComponent(v.slice(7)) : "";
+      const sc = await fetch("/api/scorecard" + recParam).then(r=>r.json());
+      renderScorecard(sc);
+    } catch(e){ $("scorecard").innerHTML = ""; }
 
     // lanes
     $("lanes").innerHTML = m.lanes.map(l=>{

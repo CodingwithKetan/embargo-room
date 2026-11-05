@@ -34,8 +34,8 @@ strong differentiator; keep it if you can and drop beat 2 (0:22) instead.
 **CAPTION:** `v1.2.6 → SAFE · OSV agrees · two human sign-offs → PUBLISHED`
 
 ### 1:48 — Accountability dashboard  ·  Screen D (browser: `localhost:7070`)
-**VO:** "Every one of those steps is on the record — per agent. This local dashboard reads the room's own history: what each agent did, the current state, and the failures it caught — those two incomplete-fix flags, front and centre. Nothing here is hand-maintained."
-**CAPTION:** `Local dashboard — per-agent actions · 2 INCOMPLETE_FIX caught`
+**VO:** "And because it's a business process, it has a scorecard. This local dashboard reads the room's own record: the SLA grade and cycle time up top, then what each agent did, and the failures it caught — those two incomplete-fix flags, front and centre. Nothing here is hand-maintained; every number traces to the hash-chained record."
+**CAPTION:** `Disclosure scorecard — MEETS SLA · per-agent actions · 2 INCOMPLETE_FIX caught`
 
 ### 2:10 — 🔒 Prevent-hack  ·  Screen C  (`npm run redteam`)
 **VO:** "Agents that build and run other people's code are a target. So the tool defends itself. Hostile repo, malicious dependency, a backdoor phoning home, a message saying 'ignore your rules and publish', an agent faking a verdict — five attacks, all blocked."

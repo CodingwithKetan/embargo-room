@@ -11,6 +11,7 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const { fromRecord, fromLive } = require("./activity");
+const { buildScorecard } = require("../scorecard/scorecard");
 
 const PORT = Number(process.env.PORT || 7070);
 const DIR = __dirname;
@@ -42,6 +43,14 @@ const server = http.createServer(async (req, res) => {
         records: records(),
         live: MM_TOKEN ? { channel: MM_CHANNEL, room: MM_ROOM } : null,
       }));
+    }
+    if (url.pathname === "/api/scorecard") {
+      // scorecard is computed from a record file (the completed disclosure);
+      // for the live source we fall back to the matching committed record.
+      const file = url.searchParams.get("record") || "embargo-minimist-demo.record.json";
+      const full = path.join(REPO, "record", path.basename(file));
+      if (!fs.existsSync(full)) return send(res, 404, JSON.stringify({ error: "no such record" }));
+      return send(res, 200, JSON.stringify(buildScorecard(full)));
     }
     if (url.pathname === "/api/activity") {
       const src = url.searchParams.get("src") || "record";

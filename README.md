@@ -86,7 +86,9 @@ cleanly when not. A clean clone prints `ALL CHECKS PASS`. Individual pieces:
 `npm run verify` · `npm run cases` · `npm run osv` · `npm run readiness` ·
 `npm run record:verify` · `npm run clock:demo` · `npm run dashboard`
 (local activity view: which agent did what, status, failures — see
-[`docs/dashboard.md`](docs/dashboard.md)).
+[`docs/dashboard.md`](docs/dashboard.md)) · `npm run scorecard`
+(SLA/KPIs: cycle time, incomplete fixes caught, grade — see
+[`docs/scorecard.md`](docs/scorecard.md)).
 
 ### 1. Verify the harness (no Switch needed — ~15s)
 
