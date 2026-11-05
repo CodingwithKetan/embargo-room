@@ -61,6 +61,24 @@ handoff flow and state machine.
 The Repro agent is told to **trust only its own run, never the vendor's claim.**
 That is the whole thesis.
 
+```mermaid
+flowchart TB
+    R["Researcher (human)"] <--> Room
+    V["Vendor (human)"] <--> Room
+    subgraph Room["Switch room — one disclosure"]
+        TK["timekeeper · clock + state"]
+        RP["repro · builds & runs the PoC"]
+        AD["advisory · drafts the advisory"]
+    end
+    RP --> DOCK["Docker (hardened)"]
+    RP --> OSV["osv.dev"]
+    Room --> REC["hash-chained record"]
+    REC --> OUT["dashboards · scorecard · cost · report · desk"]
+```
+
+📐 **Full diagram gallery** (architecture, pipeline, sequence, trust chain,
+auto-mode, bridge failover): [`docs/diagrams.md`](docs/diagrams.md).
+
 The state machine the Timekeeper drives, with the incomplete-fix loop that is the
 heart of the demo:
 

@@ -3,6 +3,10 @@
 One room per disclosure. Two humans, three agents. Each agent keeps its own
 memory per room (Switch default), so the room is a self-contained audit trail.
 
+> 📐 **Diagrams:** a full visual gallery (system architecture, the A→B→C→D
+> pipeline, the disclosure sequence, the trust/tamper-evidence chain, auto-mode
+> gating, bridge failover, and record→outputs) is in [`diagrams.md`](diagrams.md).
+
 ## Participants
 
 | Participant | Type | Role | addressing |
