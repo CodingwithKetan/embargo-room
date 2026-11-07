@@ -1,4 +1,6 @@
-In security, the patch usually exists. What breaks is the choreography between people who don't trust each other. And the fix often doesn't fix. Embargo Room runs the whole thing in one Switch room. Watch the agents work.
+Here's a problem every software vendor faces. A security bug, reported in secret, has to become a public fix. It's a handoff between a researcher and a vendor who don't fully trust each other, racing a disclosure deadline. Today it runs by hand across scattered emails, and it breaks. Deadlines slip, downstream projects never get told, and the fix the vendor ships often doesn't actually fix the bug.
+
+Embargo Room runs that entire process as one Switch room. AI agents verify and keep the clock, and humans hold the two decisions that must stay human. Watch the agents work.
 
 A researcher files a bug. The repro agent runs the exploit itself, in Docker. Triggered. The agent's own run is the evidence, never the vendor's word.
 
