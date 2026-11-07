@@ -31,7 +31,17 @@
     color:var(--fg);border:1px solid var(--border);background:var(--panel);border-radius:999px;padding:9px 16px}
   .hook .x{color:var(--crit);font-weight:600}
   .hook .dot{width:8px;height:8px;border-radius:50%;background:var(--crit);box-shadow:0 0 0 0 color-mix(in srgb,var(--crit) 60%,transparent)}
-  .meta{margin-top:30px;font-family:var(--mono);font-size:12px;color:var(--faint);letter-spacing:.04em}
+  .meta{margin-top:22px;font-family:var(--mono);font-size:12px;color:var(--faint);letter-spacing:.04em}
+  /* Switch branding */
+  .powered{margin-top:30px;display:inline-flex;align-items:center;gap:12px}
+  .powered .pb{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+  .powered .brand{display:inline-flex;align-items:center;gap:9px;padding:8px 15px;border-radius:12px;
+    border:1px solid var(--border);background:linear-gradient(180deg,#141a24,#10141b)}
+  .powered .sw{font-family:var(--sans);font-size:18px;font-weight:700;letter-spacing:-.01em;color:var(--fg)}
+  .powered .sw .ai{background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent;margin-left:4px}
+  .toggle{width:34px;height:20px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    position:relative;flex:none;box-shadow:0 0 14px color-mix(in srgb,var(--accent) 45%,transparent)}
+  .toggle::after{content:"";position:absolute;top:3px;right:3px;width:14px;height:14px;border-radius:50%;background:#0b0e13}
   /* one quiet animation: a slow sheen sweeping the card */
   .sheen{position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 40%,color-mix(in srgb,var(--accent) 9%,transparent) 50%,transparent 60%);
     transform:translateX(-60%)}
@@ -51,4 +61,8 @@
   <p class="lede">A software vulnerability disclosure, run from report to published advisory in <b>one Switch room</b> — three AI agents verify patches and keep the embargo clock, two humans hold the decisions that must stay human.</p>
   <div class="hook"><span class="dot" aria-hidden="true"></span>The <span class="x">fix that didn't fix</span> — caught live, from the vendor's real commit.</div>
   <div class="meta">one room · two humans · three agents · one verifiable record</div>
+  <div class="powered">
+    <span class="pb">Powered by</span>
+    <span class="brand"><span class="toggle" aria-hidden="true"></span><span class="sw">Switch<span class="ai">AI</span></span></span>
+  </div>
 </div>
