@@ -23,6 +23,27 @@
 
 ---
 
+## 🔀 How this uses Switch — in one picture
+
+```mermaid
+flowchart LR
+    R(("👤 Researcher")) --- ROOM
+    V(("👤 Vendor")) --- ROOM
+    subgraph SW["SWITCH — one room, one shared timeline"]
+        ROOM["#embargo-room<br/>⏱ Timekeeper · 🔬 Repro · 📝 Advisory"]
+    end
+    ROOM <-->|primary bridge| SL["Slack"]
+    ROOM <-.->|failover, record unchanged| MM["Mattermost"]
+    ROOM -->|same Timekeeper agent| D1["downstream room · rc"]
+    ROOM -->|one agent, many rooms| D2["downstream room · subarg"]
+    ROOM -->|one deadline| D3["downstream room · optimist"]
+    ROOM ==> REC["🔗 hash-chained record → SLA scorecard · per-agent cost · filed report"]
+```
+
+**Three Switch capabilities, used literally:** mutually distrusting parties act on **one shared room** · the **same agent runs every downstream room** under one deadline · the room is **bridge-agnostic** — Slack goes down mid-disclosure and work re-distributes to Mattermost with the record head unchanged.
+
+---
+
 **⚡ Prove it's real in ~15 seconds — zero dependencies, runs from a clean clone:**
 
 ```bash
