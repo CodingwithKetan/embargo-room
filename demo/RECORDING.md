@@ -1,8 +1,21 @@
 # RECORDING — do this, top to bottom
 
 Deadline-night checklist. The email requires the video to **show your workflow
-running in the chat**, so the **Mattermost room is mandatory** — that's the
-centerpiece. Everything else is supporting. ~3 minutes.
+running in the chat**, so the **room is mandatory** — that's the centerpiece.
+Everything else is supporting. ~3 minutes.
+
+> **If the room is blank / "offline":** relaunch the **Switch Console app** — it
+> restarts its bundled Mattermost and the room. (Mattermost can't be started on
+> its own; the Console manages it.)
+
+## What to emphasize (the four things you asked to show)
+
+| You want to show | Where / command | No room needed? |
+|---|---|---|
+| **Slack + distribution** | `SLACK_BOT_TOKEN=xoxb-… node bridge/status.js` (Slack connected), then `… --down slack` → traffic **distributes/fails over to Mattermost**, record head unchanged | ✅ terminal |
+| **Can't be used for harm** | `npm run redteam` → **5/5 attacks BLOCKED** · sign-off/publish are **human-only gates** · `npm run assure` (no faked verdicts) | ✅ terminal |
+| **What each agent did** | `/ops` replay (agents working, one at a time) · the activity dashboard lanes · `npm run cost` (per-agent) · `npm run assure` (agent did the work it claimed) | ✅ dashboard |
+| **The workflow in the chat** (required) | the **room** — report → INCOMPLETE_FIX → published | needs the Console up |
 
 ---
 
