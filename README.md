@@ -71,6 +71,7 @@ Three Switch capabilities this project is literally built on:
 | <img src="docs/assets/desk.png" alt="Security Desk"><br>**Security Desk** (`/desk`) — the whole program: SLA adherence 100%, program cost, downstream coordination, monitoring radar | <img src="docs/assets/activity.png" alt="Activity dashboard"><br>**Activity dashboard** (`/`) — scorecard (MEETS SLA) + per-agent cost + agent lanes + the **2× INCOMPLETE_FIX** catches |
 | <img src="docs/assets/ops.png" alt="Ops replay"><br>**Ops replay** (`/ops`) — the real disclosure plays back: one agent works, the rest wait, the state machine advances | <img src="docs/assets/control-room.png" alt="Control room"><br>**Control room** — state timeline with the incomplete-fix loop, two-CVE matrix, defenses panel |
 | <img src="docs/assets/cast.png" alt="The cast"><br>**The cast** — two humans decide, three agents verify | <img src="docs/assets/showcase.png" alt="Showcase"><br>**Product showcase** — self-playing 12-scene intro ([`dashboard/showcase.html`](dashboard/showcase.html)) |
+| <img src="docs/assets/slack-failover.png" alt="Slack failover"><br>**Runs on Slack — survives its outage** — Slack goes DOWN, work re-distributes to Mattermost, record unchanged | <img src="docs/assets/catch.png" alt="The incomplete-fix catch"><br>**The catch** — the vendor's v1.2.5 built from source → still TRIGGERED → *INCOMPLETE FIX, refused* |
 
 ## 💼 Use cases
 
