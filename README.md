@@ -15,7 +15,7 @@
 
 <img src="docs/assets/showcase.png" width="88%" alt="Embargo Room — cyber agents for security teams, built on Switch AI">
 
-🎥 **3-minute demo:** _(video link on submission)_ · 📄 [Judge's pitch](SUBMISSION.md) · 📐 [Diagrams](docs/diagrams.md) · 📚 [All docs](docs/README.md)
+🎥 <b><a href="https://youtu.be/w7hAy2l4P_w">Watch the 3-minute demo</a></b> · 📄 [Judge's pitch](SUBMISSION.md) · 📐 [Diagrams](docs/diagrams.md) · 📚 [All docs](docs/README.md)
 
 *Flip the Switch hackathon (WeMakeDevs × DevTools Academy × Switch) · **Track 1: Best Business Workflow***
 

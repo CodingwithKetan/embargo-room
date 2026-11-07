@@ -47,7 +47,7 @@ strong differentiator; keep it if you can and drop beat 2 (0:22) instead.
 
 ### 2:58 — Real advisory + reproduces  ·  Screen C  (emit:validate → npm test)
 **VO:** "It emits the real public advisory — OSV, CVE 5.0, GHSA — and validates it against osv.dev. And the entire project reproduces from a clean clone: eighteen checks, green."
-**CAPTION:** `Emits OSV/CVE/GHSA — VALIDATED · npm test 18/18`
+**CAPTION:** `Emits OSV/CVE/GHSA — VALIDATED · npm test 22/22`
 
 ### 3:14 — Bridge-agnostic close  ·  Screen C → B  (`bridge --down slack`)
 **VO:** "It runs on whatever chat your team already uses — Slack, Mattermost, Teams. A bridge outage doesn't stall the disclosure, because the truth is the portable record, not the platform. The room's history is the disclosure record."

@@ -24,7 +24,7 @@ agents go idle. Target ~3:00–3:15, one continuous take.
 | 5 | 1:48 | **D** | Local dashboard (`localhost:7070`): **Scorecard (MEETS SLA)** + **per-agent cost tracker** up top, then per-agent lanes + **Failures (2× INCOMPLETE_FIX)** | "Because it's a business process, it has a scorecard and a per-agent cost line — SLA grade, cycle time, what each agent did and spent, and the failures it caught. Every number traces to the record." |
 | 6 | 2:10 | C | `npm run redteam` → **5/5 BLOCKED** | "Agents that run code are a target, so the tool defends itself: hostile repo, malicious dependency, backdoor callback, 'publish anyway' injection, faked verdict — all blocked." |
 | 7 | 2:36 | C | record `verify` (intact) → tamper one word (**breaks at entry 27**) → `npm run assure` (**3/3 backed**) | "Nobody can quietly rewrite 'the fix didn't work' — the record is hash-chained, and every verdict is backed by a tamper-evident attested run." |
-| 8 | 2:58 | C | `npm run emit:validate` (**VALIDATED vs OSV**) → `npm test` (**18/18**) | "It emits the real public advisory — OSV, CVE 5.0, GHSA — validated against osv.dev, and the whole thing reproduces from a clean clone." |
+| 8 | 2:58 | C | `npm run emit:validate` (**VALIDATED vs OSV**) → `npm test` (**22/22**) | "It emits the real public advisory — OSV, CVE 5.0, GHSA — validated against osv.dev, and the whole thing reproduces from a clean clone." |
 | 9 | 3:14 | C → B | `node bridge/status.js --down slack` → fails over to Mattermost, record head unchanged; end on the dashboard | "It runs on whatever chat app your team uses. A bridge outage doesn't stall the disclosure — the truth is the portable record, not the platform." |
 
 Never cut: the **INCOMPLETE_FIX** beat (#3) or the **prevent-hack** beat (#6). The

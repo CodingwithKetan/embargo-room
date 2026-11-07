@@ -4,7 +4,7 @@
 
 **One line:** Coordinated vulnerability disclosure is a high-stakes business process run between companies that don't trust each other — Embargo Room runs that whole process in a single Switch room, where AI agents verify and keep the clock and the two trust decisions stay human.
 
-**Demo video:** _(link)_ · **Run it:** `git clone … && npm test` → `ALL CHECKS PASS` (18/18, zero dependencies)
+**Demo video:** https://youtu.be/w7hAy2l4P_w · **Run it:** `git clone … && npm test` → `ALL CHECKS PASS` (22/22, zero dependencies)
 
 ---
 
@@ -55,7 +55,7 @@ A full **A → B → C → D** pipeline, plus the operational layers around it:
 - **Security desk (portfolio):** the whole program in one queue — what's monitored, every disclosure with its SLA grade and cost, and downstream coordination against the deadline (`npm run portfolio`, or `/desk`). It reframes the project from "a tool for one bug" to "the desk a security team runs."
 - **Live ops replay (`/ops`):** the real disclosure played back as an operations board — one agent works at a time (pulsing, with its current action), the rest idle, and the state machine advancing to PUBLISHED. The "agents at work" view, driven entirely by the recorded events.
 
-Proof it's real: two actual CVEs (CVE-2021-44906, CVE-2020-7598), real Docker builds of real vendor commits, OSV cross-checks, and a clean-clone self-check that prints `ALL CHECKS PASS` (18/18) with **zero dependencies**.
+Proof it's real: two actual CVEs (CVE-2021-44906, CVE-2020-7598), real Docker builds of real vendor commits, OSV cross-checks, and a clean-clone self-check that prints `ALL CHECKS PASS` (22/22) with **zero dependencies**.
 
 ## The demo in one beat
 
