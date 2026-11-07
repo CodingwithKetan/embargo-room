@@ -46,7 +46,7 @@ strong differentiator; keep it if you can and drop beat 2 (0:22) instead.
 **CAPTION:** `Hash-chained record · tamper caught · 3/3 verdicts attested`
 
 ### 2:58 — Real advisory + reproduces  ·  Screen C  (emit:validate → npm test)
-**VO:** "It emits the real public advisory — OSV, CVE 5.0, GHSA — and validates it against osv.dev. And the entire project reproduces from a clean clone: eighteen checks, green."
+**VO:** "It emits the real public advisory — OSV, CVE 5.0, GHSA — and validates it against osv.dev. And the entire project reproduces from a clean clone: twenty-two checks, green."
 **CAPTION:** `Emits OSV/CVE/GHSA — VALIDATED · npm test 22/22`
 
 ### 3:14 — Bridge-agnostic close  ·  Screen C → B  (`bridge --down slack`)
