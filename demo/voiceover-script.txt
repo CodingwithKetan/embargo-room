@@ -2,6 +2,8 @@ Here's a problem every software vendor faces. A security bug, reported in secret
 
 Embargo Room runs that entire process as one Switch room. AI agents verify and keep the clock, and humans hold the two decisions that must stay human. Watch the agents work.
 
+Meet the three agents. The timekeeper owns the embargo clock and the case state, and chases silence so the secret never runs forever. The repro agent reproduces the bug and verifies every patch by building the vendor's real code in Docker. And the advisory agent drafts the public advisory, grounded in the public vulnerability database.
+
 A researcher files a bug. The repro agent runs the exploit itself, in Docker. Triggered. The agent's own run is the evidence, never the vendor's word.
 
 The vendor ships the fix, version one-point-two-point-five. The agent builds their actual commit from source. And it still triggers. Incomplete fix. The timekeeper refuses to advance, and the clock keeps running.
