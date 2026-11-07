@@ -1,8 +1,8 @@
-This is Embargo Room. Cyber agents for security teams, built on Switch AI. Meet the team that never sleeps.
+The hardest problem in security isn't finding the bug. It's what happens next. Meet Embargo Room — cyber agents for security teams, built on Switch AI.
 
-When a security bug is reported in secret, it has to become a public fix — between people who don't trust each other, racing a deadline.
+A bug reported in secret must become a public fix. Strangers who don't trust each other, racing a deadline, over email. It breaks.
 
-This is not hypothetical. Log4Shell. The X Z backdoor. The npm worm. Every ecosystem gets hit — and the response is still coordinated over email.
+Log4Shell set the internet on fire for months. The X Z backdoor nearly shipped everywhere. The npm worm spread in days. The response? Still email.
 
 Embargo Room puts everyone in one Switch room. Two humans, and three AI agents with real jobs.
 
@@ -20,4 +20,4 @@ Every action is replayable, and the record is hash-chained. Change one word, and
 
 Nothing publishes without people. The researcher approves. The vendor approves. Only then — published.
 
-Embargo Room. Coordinated disclosure, run as a Switch room. A desk your security team could run tomorrow.
+Embargo Room, built on Switch. The next Log4Shell is coming. This time, there's a desk ready for it.
