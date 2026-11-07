@@ -120,7 +120,7 @@
   .gates{display:flex;gap:2vw;flex-wrap:wrap;justify-content:center}
   .gate{border:1px solid var(--border);background:var(--panel);border-radius:14px;padding:2vh 2.4vw;min-width:200px;
     opacity:0;animation:pop .5s forwards}
-  .gate.g1{animation-delay:.7s}.gate.g2{animation-delay:1.5s}
+  .gate.g1{animation-delay:.7s}.gate.g2{animation-delay:1.5s}.gate.g3{animation-delay:2.3s}
   .gate .who{font-weight:700;font-size:clamp(15px,2vw,19px)} .gate .what{color:var(--muted);font-size:13px;margin-top:3px}
   .gate .ok{margin-top:1.2vh;font-family:var(--mono);color:var(--good);font-weight:700;font-size:clamp(14px,1.9vw,18px);
     opacity:0;animation:pop .4s forwards}
@@ -192,6 +192,18 @@
     </div>
   </section>
 
+  <!-- 1b · it keeps happening (real incidents) -->
+  <section data-d="9000">
+    <div class="eyebrow">This is not hypothetical</div>
+    <h2>One library bug can stall the <span class="bad">whole industry</span></h2>
+    <div class="gates">
+      <div class="gate g1"><div class="who">Log4Shell · 2021</div><div class="what">one logging library — every vendor on earth scrambled for weeks</div></div>
+      <div class="gate g2"><div class="who">xz backdoor · 2024</div><div class="what">a supply-chain implant, caught by one engineer's curiosity</div></div>
+      <div class="gate g3"><div class="who">npm worm · 2025</div><div class="what">hundreds of packages hijacked in days</div></div>
+    </div>
+    <div class="cap" style="animation-delay:3.4s">Every one of these needed <b>coordinated disclosure</b> — and it's still run over email.</div>
+  </section>
+
   <!-- 2 · one switch room -->
   <section data-d="7000">
     <div class="eyebrow">Embargo Room</div>
@@ -204,6 +216,18 @@
       <span class="chip ad"><i></i>Advisory — drafts, grounded</span>
     </div>
     <div class="cap">Agents verify and keep the clock. <b>Humans hold the decisions.</b></div>
+  </section>
+
+  <!-- 2a · why Switch -->
+  <section data-d="8000">
+    <div class="eyebrow">Why this needs Switch</div>
+    <h2>Not a chatbot. <b>A shared room with rules.</b></h2>
+    <div class="beats" style="font-family:var(--sans);font-weight:600;text-align:left">
+      <div class="b1">🤝 Mutually distrusting parties — <b style="color:var(--accent)">one shared timeline</b></div>
+      <div class="b2">🔁 One agent, many rooms — the same Timekeeper runs <b style="color:var(--accent)">every downstream</b></div>
+      <div class="b3" style="color:var(--fg)">🌉 Bridge-agnostic — Slack today, Mattermost in a failover, <b style="color:var(--accent)">same record</b></div>
+    </div>
+    <div class="cap" style="animation-delay:3.6s">Remove Switch and this is disconnected bots and separate inboxes.</div>
   </section>
 
   <!-- 2b · architecture -->
@@ -258,16 +282,17 @@
     <div class="stamp">INCOMPLETE FIX — CAUGHT</div>
   </section>
 
-  <!-- 5 · cost tracking -->
-  <section data-d="7000">
-    <div class="eyebrow">Governance built in</div>
-    <h2>Every agent's work — <b>tracked and costed</b></h2>
+  <!-- 5 · human power + cost -->
+  <section data-d="8000">
+    <div class="eyebrow">Human power, redirected</div>
+    <h2>Weeks of chasing → <b>two human decisions</b></h2>
+    <div class="cap" style="animation-delay:.5s">The agents run the clock, the builds, the drafting, the downstream chasing — <b>humans only sign off and publish.</b></div>
     <div class="bars">
       <div class="bar tk"><span>Timekeeper</span><span class="t"><i></i></span><span class="v">$0.32</span></div>
       <div class="bar rp"><span>Repro</span><span class="t"><i></i></span><span class="v">$0.13</span></div>
       <div class="bar ad"><span>Advisory</span><span class="t"><i></i></span><span class="v">$0.08</span></div>
     </div>
-    <div class="total">cost per disclosure: <b>$0.53</b> · graded <b>MEETS SLA</b></div>
+    <div class="total">this run: <b>18 minutes</b> · <b>$0.53</b> per disclosure · graded <b>MEETS SLA</b></div>
   </section>
 
   <!-- 6 · replayable, tamper-evident -->
