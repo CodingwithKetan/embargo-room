@@ -1,0 +1,362 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Embargo Showcase</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
+<style>
+  /* A self-playing ~60s intro: 8 scenes, auto-advancing, each animating one real
+     feature. Open full-screen (F11), press R in OBS, let it play. Space = pause,
+     ←/→ = jump a scene. All inline, no network beyond fonts. */
+  :root{
+    --bg:#0c0f14; --panel:#131821; --panel-2:#171d28; --fg:#eef1f6; --muted:#9aa4b3; --faint:#6b7686;
+    --accent:#8ea2ff; --accent-2:#2dd4bf; --good:#5bc46b; --crit:#ff6b6b; --warn:#e3b341; --violet:#a78bfa; --orange:#e3853f;
+    --border:#242b36; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace; --sans:"IBM Plex Sans",system-ui,sans-serif;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;overflow:hidden;background:
+    radial-gradient(1100px 540px at 50% -12%, color-mix(in srgb,var(--accent) 14%, transparent), transparent 70%), var(--bg);
+    color:var(--fg);font-family:var(--sans)}
+  .stage{position:relative;height:100%;display:grid;place-items:center}
+  section{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:5vh 6vw;gap:3vh}
+  section.active{display:flex}
+  .eyebrow{font-family:var(--mono);font-size:clamp(11px,1.3vw,14px);letter-spacing:.22em;text-transform:uppercase;color:var(--faint);font-weight:600;
+    opacity:0;animation:up .6s .1s forwards}
+  h2{margin:0;font-size:clamp(28px,5vw,54px);font-weight:700;letter-spacing:-.02em;line-height:1.08;max-width:22ch;
+    opacity:0;animation:up .7s .25s forwards}
+  h2 b{background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  h2 .bad{color:var(--crit)}
+  .cap{font-size:clamp(14px,1.8vw,19px);color:var(--muted);max-width:62ch;opacity:0;animation:up .7s .45s forwards}
+  .cap b{color:var(--fg)}
+  @keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes pop{0%{opacity:0;transform:scale(.7)}70%{transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+
+  /* progress rail */
+  .rail{position:absolute;left:0;right:0;bottom:0;height:4px;background:#1b2130;z-index:5}
+  .rail>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .3s linear}
+  .scenetag{position:absolute;right:16px;bottom:12px;font-family:var(--mono);font-size:11px;color:var(--faint);z-index:5}
+
+  /* S1 problem beats */
+  .beats{display:flex;flex-direction:column;gap:1.4vh;font-family:var(--mono);font-size:clamp(16px,2.6vw,26px);font-weight:600}
+  .beats div{opacity:0;animation:up .55s forwards}
+  .beats .b1{animation-delay:.9s}.beats .b2{animation-delay:1.9s}.beats .b3{animation-delay:2.9s;color:var(--crit)}
+
+  /* S2 the room */
+  .roombox{position:relative;border:1px solid var(--border);background:var(--panel);border-radius:20px;
+    padding:3.2vh 3vw;display:flex;gap:1vw;flex-wrap:wrap;justify-content:center;opacity:0;animation:pop .6s .5s forwards;
+    box-shadow:0 0 60px color-mix(in srgb,var(--accent) 12%,transparent)}
+  .chip{display:flex;align-items:center;gap:9px;border:1px solid var(--border);background:var(--panel-2);border-radius:999px;
+    padding:10px 16px;font-size:clamp(13px,1.6vw,17px);opacity:0;animation:pop .5s forwards}
+  .chip i{width:11px;height:11px;border-radius:50%;flex:none}
+  .chip.h i{background:var(--good)} .chip.tk i{background:var(--accent)} .chip.rp i{background:var(--orange)} .chip.ad i{background:var(--violet)}
+  .chip:nth-child(1){animation-delay:.9s}.chip:nth-child(2){animation-delay:1.15s}.chip:nth-child(3){animation-delay:1.5s}
+  .chip:nth-child(4){animation-delay:1.75s}.chip:nth-child(5){animation-delay:2s}
+
+  /* S3 bridges + load */
+  .net{position:relative;width:min(900px,88vw);height:38vh;opacity:0;animation:fade .5s .4s forwards}
+  .node{position:absolute;border:1px solid var(--border);background:var(--panel);border-radius:14px;padding:12px 18px;
+    font-weight:600;font-size:clamp(13px,1.7vw,17px);display:flex;align-items:center;gap:9px}
+  .node i{width:10px;height:10px;border-radius:50%;background:var(--good)}
+  .node.room{left:0;top:50%;transform:translateY(-50%);border-color:color-mix(in srgb,var(--accent) 50%,transparent)}
+  .node.slack{right:0;top:12%}
+  .node.mm{right:0;top:52%}
+  .node.teams{right:0;top:88%;opacity:.55;transform:translateY(-10%)}
+  .net.p2 .slack{border-color:color-mix(in srgb,var(--crit) 60%,transparent);color:var(--faint)}
+  .net.p2 .slack i{background:var(--crit)}
+  .net.p2 .slack .tagdown{display:inline}
+  .tagdown{display:none;font-family:var(--mono);font-size:10px;color:var(--crit);font-weight:700;letter-spacing:.08em}
+  .pkt{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--accent-2);left:9%;opacity:0;
+    box-shadow:0 0 10px var(--accent-2)}
+  .net:not(.p2) .pkt.toS{animation:toSlack 1.6s linear infinite}
+  .net.p2 .pkt.toS{display:none}
+  .pkt.toM{display:none}
+  .net.p2 .pkt.toM{display:block;animation:toMM 1.6s linear infinite}
+  .pkt:nth-of-type(odd){animation-delay:.55s!important}
+  .pkt:nth-of-type(3n){animation-delay:1.05s!important}
+  @keyframes toSlack{0%{opacity:0;left:9%;top:50%}12%{opacity:1}88%{opacity:1}100%{opacity:0;left:86%;top:16%}}
+  @keyframes toMM{0%{opacity:0;left:9%;top:50%}12%{opacity:1}88%{opacity:1}100%{opacity:0;left:86%;top:56%}}
+
+  /* S4 the catch */
+  .term{width:min(760px,90vw);text-align:left;background:#0b0e13;border:1px solid var(--border);border-radius:14px;
+    font-family:var(--mono);font-size:clamp(13px,1.8vw,18px);padding:2.4vh 2vw;opacity:0;animation:pop .5s .4s forwards;line-height:1.9}
+  .term .c{color:var(--accent-2)} .term .r{color:var(--crit);font-weight:700} .term .d{color:var(--faint)}
+  .term div{opacity:0;animation:fade .3s forwards}
+  .term .l1{animation-delay:.8s}.term .l2{animation-delay:1.6s}.term .l3{animation-delay:2.6s}.term .l4{animation-delay:3.4s}
+  .stamp{align-self:center;margin-top:1vh;font-family:var(--mono);font-weight:700;letter-spacing:.06em;color:var(--crit);
+    border:2px solid var(--crit);border-radius:10px;padding:8px 18px;font-size:clamp(15px,2.4vw,24px);
+    opacity:0;animation:pop .45s 4.2s forwards;background:color-mix(in srgb,var(--crit) 12%,transparent)}
+
+  /* S5 cost bars */
+  .bars{width:min(680px,88vw);display:flex;flex-direction:column;gap:1.6vh;opacity:0;animation:fade .5s .4s forwards}
+  .bar{display:grid;grid-template-columns:110px 1fr 70px;gap:12px;align-items:center;font-size:clamp(13px,1.7vw,17px);text-align:left}
+  .bar .t{height:14px;border-radius:7px;background:#1b2130;overflow:hidden}
+  .bar .t i{display:block;height:100%;width:0;border-radius:7px;transition:width 1.4s cubic-bezier(.2,.7,.2,1)}
+  .bar.tk .t i{background:var(--accent)} .bar.rp .t i{background:var(--orange)} .bar.ad .t i{background:var(--violet)}
+  .bar .v{font-family:var(--mono);color:var(--muted)}
+  section.active .bar.tk .t i{width:85%} section.active .bar.rp .t i{width:36%} section.active .bar.ad .t i{width:21%}
+  .total{font-family:var(--mono);font-size:clamp(15px,2.2vw,22px);color:var(--fg);opacity:0;animation:up .5s 1.9s forwards}
+  .total b{color:var(--accent-2)}
+
+  /* S6 chain */
+  .chain{display:flex;align-items:center;gap:0;opacity:0;animation:fade .5s .4s forwards}
+  .blk{width:clamp(54px,8vw,84px);height:clamp(54px,8vw,84px);border:2px solid var(--accent);border-radius:12px;
+    display:grid;place-items:center;font-family:var(--mono);font-size:clamp(10px,1.2vw,13px);color:var(--muted);background:var(--panel)}
+  .lnk{width:clamp(18px,3vw,34px);height:2px;background:var(--accent)}
+  .chain.broken .blk.bad{border-color:var(--crit);color:var(--crit);animation:shake .4s}
+  .chain.broken .lnk.bad{background:repeating-linear-gradient(90deg,var(--crit) 0 5px,transparent 5px 10px)}
+  .chain.broken .blk.dead,.chain.broken .lnk.dead{opacity:.3}
+  @keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+  .verd{margin-top:2vh;font-family:var(--mono);font-size:clamp(13px,1.9vw,19px);opacity:0}
+  .chain-ok .verd.ok{color:var(--good);animation:up .4s 1.2s forwards}
+  .broken ~ .verd.ok{display:none}
+  .verd.bad{color:var(--crit)}
+  .show-bad .verd.bad{animation:up .4s forwards}
+
+  /* S7 gates */
+  .gates{display:flex;gap:2vw;flex-wrap:wrap;justify-content:center}
+  .gate{border:1px solid var(--border);background:var(--panel);border-radius:14px;padding:2vh 2.4vw;min-width:200px;
+    opacity:0;animation:pop .5s forwards}
+  .gate.g1{animation-delay:.7s}.gate.g2{animation-delay:1.5s}
+  .gate .who{font-weight:700;font-size:clamp(15px,2vw,19px)} .gate .what{color:var(--muted);font-size:13px;margin-top:3px}
+  .gate .ok{margin-top:1.2vh;font-family:var(--mono);color:var(--good);font-weight:700;font-size:clamp(14px,1.9vw,18px);
+    opacity:0;animation:pop .4s forwards}
+  .gate.g1 .ok{animation-delay:2.3s}.gate.g2 .ok{animation-delay:2.8s}
+  .pub{margin-top:2.4vh;font-family:var(--mono);font-weight:700;color:var(--good);border:2px solid var(--good);
+    background:color-mix(in srgb,var(--good) 10%,transparent);border-radius:12px;padding:10px 24px;
+    font-size:clamp(16px,2.6vw,26px);opacity:0;animation:pop .5s 3.5s forwards}
+
+  /* persistent Switch badge (every scene) */
+  .corner{position:absolute;top:16px;right:18px;z-index:6;display:flex;align-items:center;gap:9px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+  .corner .toggle{transform:scale(.75)}
+  .corner .nm{font-family:var(--sans);font-weight:700;font-size:14px;color:var(--fg);letter-spacing:0;text-transform:none}
+  .corner .nm b{background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700}
+
+  /* architecture scene */
+  .arch{position:relative;width:min(940px,92vw);height:42vh;opacity:0;animation:fade .5s .3s forwards}
+  .arch svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+  .arch .w{fill:none;stroke:color-mix(in srgb,var(--accent) 55%,transparent);stroke-width:.45;
+    stroke-dasharray:80;stroke-dashoffset:80;animation:draw .9s forwards}
+  .w1{animation-delay:1.0s}.w2{animation-delay:1.6s}.w3{animation-delay:2.0s}
+  .w4{animation-delay:2.5s}.w5{animation-delay:2.9s}.w6{animation-delay:3.3s}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .an{position:absolute;border:1px solid var(--border);background:var(--panel);border-radius:12px;padding:8px 14px;
+    font-weight:600;font-size:clamp(12px,1.5vw,16px);opacity:0;animation:pop .45s forwards;text-align:left;line-height:1.25}
+  .an small{display:block;color:var(--faint);font-weight:400;font-family:var(--mono);font-size:10px;margin-top:2px}
+  .an.core{border-color:color-mix(in srgb,var(--accent) 55%,transparent);
+    box-shadow:0 0 34px color-mix(in srgb,var(--accent) 18%,transparent)}
+  .an.core{animation-delay:.5s}.an.n-h{animation-delay:.9s}.an.n-sl{animation-delay:1.7s}
+  .an.n-mm{animation-delay:2.1s}.an.n-do{animation-delay:2.6s}.an.n-os{animation-delay:3.0s}.an.n-re{animation-delay:3.4s}
+
+  /* S8 close (brand) */
+  .logo{font-size:clamp(46px,9vw,96px);font-weight:700;letter-spacing:-.03em;line-height:1;
+    background:linear-gradient(180deg,#fff,#c7cfe0);-webkit-background-clip:text;background-clip:text;color:transparent;
+    opacity:0;animation:pop .7s .3s forwards}
+  .powered{display:inline-flex;align-items:center;gap:12px;opacity:0;animation:up .6s 1.2s forwards}
+  .powered .pb{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+  .brandbox{display:inline-flex;align-items:center;gap:9px;padding:9px 16px;border-radius:12px;border:1px solid var(--border);
+    background:linear-gradient(180deg,#141a24,#10141b)}
+  .sw{font-size:19px;font-weight:700;color:var(--fg)}
+  .sw .ai{background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent;margin-left:4px}
+  .toggle{width:34px;height:20px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    position:relative;flex:none;box-shadow:0 0 14px color-mix(in srgb,var(--accent) 45%,transparent)}
+  .toggle::after{content:"";position:absolute;top:3px;right:3px;width:14px;height:14px;border-radius:50%;background:#0b0e13}
+</style>
+
+<div class="stage" id="stage">
+
+  <div class="corner"><span>Powered by</span><span class="toggle"></span><span class="nm">Switch<b>AI</b></span></div>
+
+  <!-- 0 · product pitch -->
+  <section data-d="7000">
+    <div class="eyebrow">Switch AI · for security teams</div>
+    <h2><b>Cyber agents</b> for security teams</h2>
+    <div class="cap">Meet <b>Embargo Room</b> — AI agents that run coordinated vulnerability disclosure end to end, on the chat your team already uses.</div>
+    <div class="powered"><span class="pb">Built on</span>
+      <span class="brandbox"><span class="toggle"></span><span class="sw">Switch<span class="ai">AI</span></span></span>
+    </div>
+  </section>
+
+  <!-- 1 · the problem -->
+  <section data-d="8000">
+    <div class="eyebrow">Every software vendor has this process</div>
+    <h2>A secret bug must become a <b>public fix</b> — run by hand, it breaks</h2>
+    <div class="beats">
+      <div class="b1">→ deadlines slip</div>
+      <div class="b2">→ downstreams never hear about it</div>
+      <div class="b3">→ the "fix" doesn't actually fix</div>
+    </div>
+  </section>
+
+  <!-- 2 · one switch room -->
+  <section data-d="7000">
+    <div class="eyebrow">Embargo Room</div>
+    <h2>The whole disclosure, in <b>one Switch room</b></h2>
+    <div class="roombox">
+      <span class="chip h"><i></i>Researcher</span>
+      <span class="chip h"><i></i>Vendor</span>
+      <span class="chip tk"><i></i>Timekeeper — clock &amp; state</span>
+      <span class="chip rp"><i></i>Repro — builds &amp; verifies</span>
+      <span class="chip ad"><i></i>Advisory — drafts, grounded</span>
+    </div>
+    <div class="cap">Agents verify and keep the clock. <b>Humans hold the decisions.</b></div>
+  </section>
+
+  <!-- 2b · architecture -->
+  <section data-d="9000">
+    <div class="eyebrow">Architecture</div>
+    <h2>One room, wired to <b>proof</b></h2>
+    <div class="arch">
+      <svg viewBox="0 0 100 56" preserveAspectRatio="none" aria-hidden="true">
+        <path class="w w1" d="M15,30 L36,30"/>
+        <path class="w w2" d="M62,26 L80,14"/>
+        <path class="w w3" d="M62,30 L80,32"/>
+        <path class="w w4" d="M44,36 L26,46"/>
+        <path class="w w5" d="M52,36 L56,46"/>
+        <path class="w w6" d="M60,34 L78,44"/>
+      </svg>
+      <div class="an n-h"  style="left:2%;top:46%">Researcher · Vendor<small>humans — they decide</small></div>
+      <div class="an core" style="left:36%;top:42%">Switch Room<small>Timekeeper · Repro · Advisory</small></div>
+      <div class="an n-sl" style="left:78%;top:12%">Slack<small>primary bridge</small></div>
+      <div class="an n-mm" style="left:78%;top:48%">Mattermost<small>fallback bridge</small></div>
+      <div class="an n-do" style="left:16%;top:80%">Docker<small>hardened builds</small></div>
+      <div class="an n-os" style="left:48%;top:80%">OSV<small>public grounding</small></div>
+      <div class="an n-re" style="left:74%;top:76%">Record<small>hash-chained truth</small></div>
+    </div>
+    <div class="cap">Humans decide · agents verify in <b>Docker</b> and ground in <b>OSV</b> · everything lands in a <b>tamper-evident record</b>.</div>
+  </section>
+
+  <!-- 3 · any chat + load management -->
+  <section data-d="9000" data-phase="4200" data-phaseclass="p2" data-phasetarget=".net">
+    <div class="eyebrow">Bridge-agnostic · load managed</div>
+    <h2>Runs on <b>Slack</b> — survives its outage</h2>
+    <div class="net">
+      <div class="node room">Disclosure room</div>
+      <div class="node slack"><i></i>Slack <span class="tagdown">DOWN</span></div>
+      <div class="node mm"><i></i>Mattermost</div>
+      <div class="node teams"><i></i>Teams…</div>
+      <span class="pkt toS"></span><span class="pkt toS"></span><span class="pkt toS"></span>
+      <span class="pkt toM"></span><span class="pkt toM"></span><span class="pkt toM"></span>
+    </div>
+    <div class="cap">Slack overloaded or down? Work <b>re-distributes to the next bridge</b> — the record carries on unchanged.</div>
+  </section>
+
+  <!-- 4 · the catch -->
+  <section data-d="8000">
+    <div class="eyebrow">Trust no claim — build it</div>
+    <h2>The vendor's fix, <span class="bad">verified from source</span></h2>
+    <div class="term">
+      <div class="l1"><span class="c">$</span> verify-ref --repo minimistjs/minimist --ref <b>v1.2.5</b></div>
+      <div class="l2"><span class="d">cloning the vendor's actual commit… building in Docker… running the exploit…</span></div>
+      <div class="l3"><span class="r">TRIGGERED</span> — the shipped fix is still vulnerable</div>
+      <div class="l4"><span class="d">timekeeper:</span> advance <span class="r">refused</span>, embargo clock keeps running</div>
+    </div>
+    <div class="stamp">INCOMPLETE FIX — CAUGHT</div>
+  </section>
+
+  <!-- 5 · cost tracking -->
+  <section data-d="7000">
+    <div class="eyebrow">Governance built in</div>
+    <h2>Every agent's work — <b>tracked and costed</b></h2>
+    <div class="bars">
+      <div class="bar tk"><span>Timekeeper</span><span class="t"><i></i></span><span class="v">$0.32</span></div>
+      <div class="bar rp"><span>Repro</span><span class="t"><i></i></span><span class="v">$0.13</span></div>
+      <div class="bar ad"><span>Advisory</span><span class="t"><i></i></span><span class="v">$0.08</span></div>
+    </div>
+    <div class="total">cost per disclosure: <b>$0.53</b> · graded <b>MEETS SLA</b></div>
+  </section>
+
+  <!-- 6 · replayable, tamper-evident -->
+  <section data-d="8000" data-phase="3200" data-phaseclass="broken" data-phasetarget=".chain" data-phaseclass2="show-bad">
+    <div class="eyebrow">Audit &amp; replay</div>
+    <h2>Every action <b>replayable</b> — the record can't be rewritten</h2>
+    <div class="chain">
+      <span class="blk">report</span><span class="lnk"></span>
+      <span class="blk">verify</span><span class="lnk"></span>
+      <span class="blk bad">edit?</span><span class="lnk bad"></span>
+      <span class="blk dead">sign-off</span><span class="lnk dead"></span>
+      <span class="blk dead">publish</span>
+    </div>
+    <div class="verd bad">⛔ chain breaks at the tampered entry — verification fails</div>
+    <div class="cap">Hash-chained history. Change one word and <b>everyone can prove it.</b></div>
+  </section>
+
+  <!-- 7 · human gates -->
+  <section data-d="7000">
+    <div class="eyebrow">Can't be weaponised</div>
+    <h2>Agents verify. <b>Humans decide.</b></h2>
+    <div class="gates">
+      <div class="gate g1"><div class="who">Researcher</div><div class="what">go-to-publish</div><div class="ok">✓ APPROVED</div></div>
+      <div class="gate g2"><div class="who">Vendor</div><div class="what">sign-off</div><div class="ok">✓ APPROVED</div></div>
+    </div>
+    <div class="pub">PUBLISHED</div>
+    <div class="cap">Plus a runnable red-team: hostile repos, injections, fake verdicts — <b>5/5 blocked.</b></div>
+  </section>
+
+  <!-- 8 · close -->
+  <section data-d="8000">
+    <div class="eyebrow">Flip the Switch · Track 1 — Business Workflow</div>
+    <div class="logo">Embargo&nbsp;Room</div>
+    <div class="cap">One room · two humans · three agents · one verifiable record</div>
+    <div class="powered"><span class="pb">Powered by</span>
+      <span class="brandbox"><span class="toggle"></span><span class="sw">Switch<span class="ai">AI</span></span></span>
+    </div>
+  </section>
+
+  <div class="rail"><i id="prog"></i></div>
+  <div class="scenetag" id="tag"></div>
+</div>
+
+<script>
+  const scenes=[...document.querySelectorAll("section")];
+  const prog=document.getElementById("prog"), tag=document.getElementById("tag");
+  let i=0, t0=0, raf=null, timer=null, phaseTimers=[], paused=false, remaining=0;
+
+  function clearPhases(){ phaseTimers.forEach(clearTimeout); phaseTimers=[]; }
+  function show(n){
+    clearTimeout(timer); clearPhases(); cancelAnimationFrame(raf);
+    scenes.forEach(s=>s.classList.remove("active"));
+    i=(n+scenes.length)%scenes.length;
+    const s=scenes[i];
+    // restart css animations
+    void s.offsetWidth;
+    s.classList.add("active");
+    // reset phase classes
+    const pt=s.dataset.phasetarget && s.querySelector(s.dataset.phasetarget);
+    if(pt){ pt.classList.remove(s.dataset.phaseclass); }
+    s.classList.remove(s.dataset.phaseclass2||"_none");
+    // schedule phase switch (e.g. slack goes down / chain breaks)
+    if(s.dataset.phase){
+      phaseTimers.push(setTimeout(()=>{
+        if(pt) pt.classList.add(s.dataset.phaseclass);
+        if(s.dataset.phaseclass2) s.classList.add(s.dataset.phaseclass2);
+      }, +s.dataset.phase));
+    }
+    const d=+s.dataset.d||7000;
+    tag.textContent=`scene ${i+1} / ${scenes.length}`;
+    t0=performance.now(); remaining=d;
+    (function tick(){ if(paused) return;
+      const e=performance.now()-t0;
+      prog.style.width=Math.min(100,e/d*100)+"%";
+      if(e<d) raf=requestAnimationFrame(tick);
+    })();
+    timer=setTimeout(()=>{ if(!paused) show(i+1); }, d);
+  }
+  addEventListener("keydown",(e)=>{
+    if(e.code==="Space"){ e.preventDefault();
+      if(!paused){ paused=true; clearTimeout(timer); clearPhases(); remaining-= (performance.now()-t0); }
+      else{ paused=false; t0=performance.now(); const d=remaining;
+        (function tick(){ if(paused) return; const e2=performance.now()-t0;
+          prog.style.width=Math.min(100,(1-(d-e2)/(+scenes[i].dataset.d))*100)+"%";
+          if(e2<d) raf=requestAnimationFrame(tick); })();
+        timer=setTimeout(()=>show(i+1), d); }
+    }
+    if(e.key==="ArrowRight") show(i+1);
+    if(e.key==="ArrowLeft") show(i-1);
+  });
+  show(0);
+</script>
