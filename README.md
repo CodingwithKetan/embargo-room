@@ -1,28 +1,39 @@
-# Embargo Room
+<div align="center">
 
-> **In security, the patch usually exists. What breaks is the choreography between
-> parties who don't trust each other — and the "fix" often doesn't fix.**
+# 🛡️ Embargo Room
 
-Embargo Room runs a full software vulnerability disclosure — **report → public
-advisory** — inside **one Switch room**: AI agents keep the embargo clock,
-reproduce the bug, and verify the vendor's *actual commit*; humans hold the only
-two decisions that must stay human — the vendor's sign-off and the researcher's
-go-to-publish.
+### The bug isn't the hard part. **What happens next is.**
 
-Built for the Flip the Switch hackathon (WeMakeDevs × DevTools Academy ×
-Switch). **Track 1: Best Business Workflow.**
+**Cyber agents for security teams — a full coordinated vulnerability disclosure,<br>report → published advisory, run as one Switch room.**
 
-**Prove it's real in ~15 seconds — zero dependencies, runs from a clean clone:**
+<p>
+<img alt="Built on Switch AI" src="https://img.shields.io/badge/built%20on-Switch%20AI-8ea2ff?style=for-the-badge">
+<img alt="selfcheck 22/22" src="https://img.shields.io/badge/selfcheck-22%2F22%20passing-2ea44f?style=for-the-badge">
+<img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-zero-blueviolet?style=for-the-badge">
+<img alt="MIT license" src="https://img.shields.io/badge/license-MIT-blue?style=for-the-badge">
+</p>
+
+<img src="docs/assets/showcase.png" width="88%" alt="Embargo Room — cyber agents for security teams, built on Switch AI">
+
+🎥 **3-minute demo:** _(video link on submission)_ · 📄 [Judge's pitch](SUBMISSION.md) · 📐 [Diagrams](docs/diagrams.md) · 📚 [All docs](docs/README.md)
+
+*Flip the Switch hackathon (WeMakeDevs × DevTools Academy × Switch) · **Track 1: Best Business Workflow***
+
+</div>
+
+---
+
+**⚡ Prove it's real in ~15 seconds — zero dependencies, runs from a clean clone:**
 
 ```bash
-npm test     # → ALL CHECKS PASS (19/19): real Docker builds, OSV cross-checks, tamper-evident record
+npm test     # → ALL CHECKS PASS (22/22): real Docker builds, OSV cross-checks, tamper-evident record
 ```
 
-**See it:**
-- 🎥 **3-min demo** — _(video link on submission)_ · run-of-show [`demo/record-live.md`](demo/record-live.md), word-for-word script [`demo/narration.md`](demo/narration.md)
-- 📊 **Control room** [`dashboard/control-room.html`](dashboard/control-room.html) · **live activity dashboard** `npm run dashboard` → **`/ops`** (agents-at-work replay) · **`/desk`** (security desk / portfolio)
-- 🧾 **Business outputs:** `npm run scorecard` (SLA/KPIs) · `npm run report` (the formal disclosure report a business files)
-- 📄 **Judge's pitch:** [`SUBMISSION.md`](SUBMISSION.md)
+**Everything to look at:**
+- 📊 `npm run dashboard` → activity **`/`** · agents-at-work replay **[`/ops`](docs/dashboard.md)** · security desk **[`/desk`](docs/portfolio.md)** · plus the [control room](dashboard/control-room.html)
+- 🧾 **Business outputs:** `npm run scorecard` (SLA/KPIs) · `npm run cost` (per-agent cost) · `npm run report` (the filed disclosure report) · `npm run portfolio`
+- 🎬 **Demo kit:** [`demo/STORYBOARD.md`](demo/STORYBOARD.md) · [`demo/record-live.md`](demo/record-live.md)
+
 > Every figure traces to `record/*.record.json`, `downstream/state.json` and osv.dev — nothing is hand-maintained.
 
 ## The problem
@@ -34,7 +45,7 @@ slip, vendors go silent, downstream never finds out, and — the one this projec
 makes unmissable — the "fix" often doesn't actually fix the bug. The patch
 usually exists; the choreography around it breaks.
 
-## How Switch is central (not decorative)
+## 🔀 Why Switch is the whole point
 
 Disclosure is **mutually distrusting parties who must share exactly one timeline
 and one set of evidence, while agents act on that same shared state.** That is
@@ -44,6 +55,31 @@ and write the *same* room, with per-party addressing rules, handoffs by name,
 and a persistent shared history that becomes the disclosure's audit trail.
 **Remove Switch and you are left with three disconnected bots and five separate
 inboxes — the broken status quo this project replaces.**
+
+Three Switch capabilities this project is literally built on:
+
+| Switch capability | How Embargo Room uses it |
+|---|---|
+| **One shared room, many parties** | Researcher, vendor and three agents act on one timeline — the room *is* the disclosure record |
+| **One agent, many rooms** | The *same* Timekeeper runs the parent disclosure **and** every downstream child room (rc, subarg, optimist) under one deadline |
+| **Bridge-agnostic (Slack ⇄ Mattermost ⇄ …)** | Primary on Slack; an outage re-routes to Mattermost with the record head unchanged (`node bridge/status.js --down slack`) |
+
+## 🖥️ Screenshots — all real, all local
+
+| | |
+|:---:|:---:|
+| <img src="docs/assets/desk.png" alt="Security Desk"><br>**Security Desk** (`/desk`) — the whole program: SLA adherence 100%, program cost, downstream coordination, monitoring radar | <img src="docs/assets/activity.png" alt="Activity dashboard"><br>**Activity dashboard** (`/`) — scorecard (MEETS SLA) + per-agent cost + agent lanes + the **2× INCOMPLETE_FIX** catches |
+| <img src="docs/assets/ops.png" alt="Ops replay"><br>**Ops replay** (`/ops`) — the real disclosure plays back: one agent works, the rest wait, the state machine advances | <img src="docs/assets/control-room.png" alt="Control room"><br>**Control room** — state timeline with the incomplete-fix loop, two-CVE matrix, defenses panel |
+| <img src="docs/assets/cast.png" alt="The cast"><br>**The cast** — two humans decide, three agents verify | <img src="docs/assets/showcase.png" alt="Showcase"><br>**Product showcase** — self-playing 12-scene intro ([`dashboard/showcase.html`](dashboard/showcase.html)) |
+
+## 💼 Use cases
+
+| Who | What Embargo Room does for them |
+|---|---|
+| **A vendor's security team (PSIRT)** | Every incoming report becomes a room: the embargo clock is enforced, patches are verified **from the vendor's real commit** — the v1.2.5 "fix" that didn't fix gets *caught* — and the advisory is drafted grounded in OSV. |
+| **An open-source maintainer** | The whole minimist-style disclosure handled end to end: reproduction, patch verification, downstream coordination (rc, subarg, optimist), and ready-to-file OSV / CVE 5.0 / GHSA artifacts. |
+| **A security lead running many disclosures** | The **Security Desk**: every case graded against its SLA, costed per agent, every downstream tracked to the shared deadline. The next Log4Shell lands on a desk, not in an inbox. |
+| **Compliance / legal** | A printable, filed disclosure report (`npm run report`) signed by a hash-chained record — change one word anywhere and `npm run record:verify` breaks, provably. |
 
 ## Architecture
 
