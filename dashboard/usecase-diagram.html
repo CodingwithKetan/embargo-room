@@ -1,0 +1,147 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Switch use-case diagram</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
+<style>
+  /* Fixed 1600x900 canvas, built to be screenshot for the README hero diagram. */
+  :root{
+    --bg:#0c0f14; --panel:#131821; --panel2:#171d28; --fg:#eef1f6; --muted:#9aa4b3; --faint:#6b7686;
+    --accent:#8ea2ff; --accent2:#2dd4bf; --good:#5bc46b; --crit:#ff6b6b; --warn:#e3b341; --violet:#a78bfa;
+    --border:#242b36; --mono:"IBM Plex Mono",monospace; --sans:"IBM Plex Sans",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box} body{margin:0;width:1600px;height:900px;overflow:hidden;position:relative;
+    background:radial-gradient(1000px 420px at 50% -8%, #8ea2ff22, transparent 70%),var(--bg);
+    color:var(--fg);font-family:var(--sans)}
+  .wm{position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);font-weight:700;font-size:270px;
+    letter-spacing:-.04em;color:#fff;opacity:.016;white-space:nowrap}
+  svg.wires{position:absolute;inset:0;width:1600px;height:900px}
+  .hdr{position:absolute;top:26px;left:48px;font-family:var(--mono);font-size:14px;letter-spacing:.2em;color:var(--faint)}
+  .pow{position:absolute;top:20px;right:48px;display:flex;align-items:center;gap:10px;
+    font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--faint)}
+  .tgl{width:38px;height:22px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent2));
+    position:relative;box-shadow:0 0 16px #8ea2ff66}
+  .tgl::after{content:"";position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:50%;background:#0b0e13}
+  .pow b{font-family:var(--sans);font-size:17px;letter-spacing:0;color:var(--fg)}
+  .pow b span{color:var(--accent)}
+
+  .card{position:absolute;background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:18px 20px}
+  .human{border-color:#2b5c38;background:#111b14;width:230px}
+  .human .nm{font-weight:700;font-size:19px;display:flex;gap:10px;align-items:center}
+  .human .rl{color:var(--muted);font-size:13px;margin-top:4px}
+  .dotg{width:12px;height:12px;border-radius:50%;background:var(--good);box-shadow:0 0 10px var(--good)}
+
+  .room{left:440px;top:300px;width:400px;border-color:var(--accent);border-width:2px;
+    box-shadow:0 0 60px #8ea2ff2e;background:linear-gradient(180deg,#171f33,#121724)}
+  .room .tag{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--accent)}
+  .room h2{margin:6px 0 2px;font-size:26px}
+  .room .tl{color:var(--muted);font-size:13px;margin-bottom:12px}
+  .chip{display:flex;align-items:center;gap:9px;background:var(--panel2);border:1px solid var(--border);
+    border-radius:10px;padding:8px 12px;font-size:14px;font-weight:600;margin-top:8px}
+  .av{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;color:#fff;
+    font:700 11px/1 var(--mono);flex:none}
+  .av.tk{background:#3b5bdb}.av.rp{background:#c2410c}.av.ad{background:#7c3aed}
+  .chip small{color:var(--faint);font-weight:400;margin-left:auto;font-family:var(--mono);font-size:10.5px}
+
+  .panel{position:absolute;border:1px dashed #333c49;border-radius:18px;padding:14px 18px}
+  .panel .cap{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
+  .bridges{left:1020px;top:96px;width:520px;height:260px}
+  .app{position:absolute;display:flex;align-items:center;gap:11px;background:var(--panel);
+    border:1px solid var(--border);border-radius:12px;padding:12px 16px;font-weight:700;font-size:17px}
+  .badge{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:5px}
+  .b-pri{color:#0c0f14;background:var(--accent2)} .b-fo{color:var(--warn);background:#2e2510}
+  .mi{width:26px;height:26px;border-radius:7px;color:#fff;font:700 14px/26px var(--sans);text-align:center;flex:none}
+  .teams{opacity:.45}
+
+  .downs{left:1020px;top:402px;width:520px;height:150px}
+  .dr{position:absolute;top:60px;display:flex;align-items:center;gap:9px;background:var(--panel);
+    border:1px solid #3a2f55;border-radius:11px;padding:10px 15px;font-family:var(--mono);font-weight:600;font-size:14px}
+  .dr i{width:9px;height:9px;border-radius:50%;background:var(--violet);box-shadow:0 0 8px var(--violet)}
+
+  .rec{left:560px;top:680px;width:620px;border-color:#6b5616;background:#191508}
+  .rec .t{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;color:var(--warn)}
+  .rec .s{color:#cdb77a;font-size:13.5px;margin-top:5px;font-family:var(--mono)}
+
+  .lbl{position:absolute;font-family:var(--mono);font-size:11.5px;color:var(--faint);background:var(--bg);padding:1px 7px;border-radius:6px}
+  .lbl.b{color:#9fd8f2}.lbl.v{color:#c9b7f5}.lbl.g{color:#d9c27a}.lbl.r{color:#f0a0a0}
+</style>
+
+<div class="wm">Switch&thinsp;AI</div>
+
+<svg class="wires" viewBox="0 0 1600 900" fill="none">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6b86"/></marker>
+    <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#36C5F0"/></marker>
+    <marker id="av2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#a78bfa"/></marker>
+    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#e3b341"/></marker>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ff6b6b"/></marker>
+  </defs>
+  <!-- humans -> room -->
+  <path d="M300,345 C370,345 380,380 438,392" stroke="#3f7a4e" stroke-width="3" marker-end="url(#a)"/>
+  <path d="M300,575 C370,575 380,520 438,498" stroke="#3f7a4e" stroke-width="3" marker-end="url(#a)"/>
+  <!-- room -> slack (primary) -->
+  <path d="M842,360 C930,320 950,230 1058,196" stroke="#36C5F0" stroke-width="4.5" marker-end="url(#ab)"/>
+  <!-- slack -> mattermost failover -->
+  <path d="M1246,182 C1330,190 1360,210 1382,240" stroke="#ff6b6b" stroke-width="3" stroke-dasharray="7 7" marker-end="url(#ar)"/>
+  <!-- room -> downstream panel -->
+  <path d="M842,470 C930,470 940,477 1016,480" stroke="#a78bfa" stroke-width="3.5" marker-end="url(#av2)"/>
+  <!-- room -> record -->
+  <path d="M640,588 C640,630 700,660 740,678" stroke="#e3b341" stroke-width="5" marker-end="url(#ag)"/>
+</svg>
+
+<div class="hdr">HOW&nbsp;EMBARGO&nbsp;ROOM&nbsp;USES&nbsp;SWITCH</div>
+<div class="pow"><span>POWERED BY</span><span class="tgl"></span><b>Switch<span>AI</span></b></div>
+
+<div class="card human" style="left:64px;top:300px">
+  <div class="nm"><span class="dotg"></span>👤 Researcher</div>
+  <div class="rl">files the report · holds <b>go-to-publish</b></div>
+</div>
+<div class="card human" style="left:64px;top:530px">
+  <div class="nm"><span class="dotg"></span>👤 Vendor</div>
+  <div class="rl">ships the patch · gives <b>sign-off</b></div>
+</div>
+
+<div class="card room">
+  <div class="tag">SWITCH ROOM · ONE SHARED TIMELINE</div>
+  <h2>#embargo-minimist</h2>
+  <div class="tl">mutually distrusting parties, one room — the room <b>is</b> the audit trail</div>
+  <div class="chip"><span class="av tk">TK</span>Timekeeper <small>clock · state · escalation</small></div>
+  <div class="chip"><span class="av rp">RP</span>Repro <small>builds the REAL commit</small></div>
+  <div class="chip"><span class="av ad">AD</span>Advisory <small>OSV-grounded drafting</small></div>
+</div>
+
+<div class="panel bridges">
+  <div class="cap">chat bridges — pick any · survive any</div>
+  <div class="app" style="left:28px;top:56px">
+    <svg width="26" height="26" viewBox="0 0 24 24"><rect x="10.2" y="1.5" width="3.6" height="9.3" rx="1.8" fill="#36C5F0"/><rect x="13.2" y="10.2" width="9.3" height="3.6" rx="1.8" fill="#2EB67D"/><rect x="10.2" y="13.2" width="3.6" height="9.3" rx="1.8" fill="#ECB22E"/><rect x="1.5" y="10.2" width="9.3" height="3.6" rx="1.8" fill="#E01E5A"/></svg>
+    Slack <span class="badge b-pri">PRIMARY</span>
+  </div>
+  <div class="app" style="left:258px;top:150px">
+    <span class="mi" style="background:#1e70e8">M</span> Mattermost <span class="badge b-fo">FAILOVER</span>
+  </div>
+  <div class="app teams" style="left:28px;top:168px">
+    <span class="mi" style="background:#6264a7">T</span> Teams…
+  </div>
+</div>
+
+<div class="panel downs">
+  <div class="cap">downstream rooms — same Timekeeper · one deadline</div>
+  <div class="dr" style="left:30px"><i></i>#rc</div>
+  <div class="dr" style="left:170px"><i></i>#subarg</div>
+  <div class="dr" style="left:340px"><i></i>#optimist</div>
+</div>
+
+<div class="card rec">
+  <div class="t">🔗 Hash-chained record</div>
+  <div class="s">SLA scorecard · per-agent cost ($0.53/disclosure) · filed report — change one word, verification breaks</div>
+</div>
+
+<div class="lbl b" style="left:905px;top:258px">primary bridge</div>
+<div class="lbl r" style="left:1345px;top:226px">outage → re-route</div>
+<div class="lbl v" style="left:880px;top:452px">one agent · many rooms</div>
+<div class="lbl g" style="left:530px;top:625px">every message, chained</div>
