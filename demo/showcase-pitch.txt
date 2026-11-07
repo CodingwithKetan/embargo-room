@@ -1,0 +1,23 @@
+This is Embargo Room. Cyber agents for security teams, built on Switch AI. Meet the team that never sleeps.
+
+When a security bug is reported in secret, it has to become a public fix — between people who don't trust each other, racing a deadline.
+
+This is not hypothetical. Log4Shell. The X Z backdoor. The npm worm. Every ecosystem gets hit — and the response is still coordinated over email.
+
+Embargo Room puts everyone in one Switch room. Two humans, and three AI agents with real jobs.
+
+Why Switch? Because this needs a shared room with rules. One timeline everyone trusts. One agent across every downstream. On any chat bridge.
+
+The architecture is simple. Humans decide. Agents verify — building in Docker, grounding in the public vulnerability database — and everything lands in a tamper-evident record.
+
+It runs where your team already works. Here, it's on Slack. And when Slack goes down, the work re-routes to Mattermost automatically. The disclosure never stalls.
+
+And it trusts no one's word. The vendor shipped a fix. The agent built their actual commit — and it still triggered. Caught.
+
+Weeks of human chasing become two human decisions. This run took eighteen minutes, and cost fifty-three cents.
+
+Every action is replayable, and the record is hash-chained. Change one word, and the chain breaks for everyone to see.
+
+Nothing publishes without people. The researcher approves. The vendor approves. Only then — published.
+
+Embargo Room. Coordinated disclosure, run as a Switch room. A desk your security team could run tomorrow.
