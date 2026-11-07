@@ -116,5 +116,8 @@
   function kpi(v,k,cls){ return `<div class="kpi"><div class="v ${cls||""}">${esc(v)}</div><div class="k">${esc(k)}</div></div>`; }
 
   $("theme").addEventListener("click",()=>{const r=document.documentElement,c=r.getAttribute("data-theme");r.setAttribute("data-theme",c==="dark"?"light":"dark");});
+  // recording mode: /desk?clean hides the header buttons for a clean frame
+  if(new URLSearchParams(location.search).has("clean"))
+    document.querySelectorAll("a.link, #theme").forEach(e=>e.style.display="none");
   load();
 </script>
