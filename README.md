@@ -97,6 +97,32 @@ handoff flow and state machine.
 The Repro agent is told to **trust only its own run, never the vendor's claim.**
 That is the whole thesis.
 
+Each agent's responsibilities, and who hands what to whom:
+
+```mermaid
+flowchart LR
+    subgraph H["👤 Humans — they decide"]
+        R["Researcher<br/>• files report + PoC<br/>• holds go-to-publish"]
+        V["Vendor<br/>• ships the patch<br/>• gives sign-off"]
+    end
+    subgraph A["🤖 Agents — they verify & coordinate"]
+        TK["⏱ Timekeeper<br/>• embargo clock + state machine<br/>• chases silence, escalates<br/>• gates PUBLISH on downstream readiness"]
+        RP["🔬 Repro<br/>• reproduces the bug in Docker<br/>• builds the vendor's REAL commit<br/>• attests every run — Layer D"]
+        AD["📝 Advisory<br/>• drafts the advisory from room history<br/>• grounds every claim in OSV<br/>• emits OSV / CVE 5.0 / GHSA — Layer C"]
+    end
+    WT["📡 Watch<br/>• monitors the OSV watchlist<br/>• proposes — never acts alone"]
+
+    R -->|report| TK
+    TK -->|verify this| RP
+    RP -->|TRIGGERED / SAFE / INCOMPLETE_FIX| TK
+    TK -->|notified, clock running| V
+    V -->|patch ref| TK
+    TK -->|VERIFIED_FIXED| AD
+    AD -->|draft for redline| R
+    AD -->|draft for redline| V
+    WT -.->|new CVE proposal| R
+```
+
 ```mermaid
 flowchart TB
     R["Researcher (human)"] <--> Room

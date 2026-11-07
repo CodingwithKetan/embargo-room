@@ -4,6 +4,7 @@ Every diagram here renders on GitHub (Mermaid). They describe the real system �
 the same components you run with `npm test`, `npm run dashboard` and the room.
 
 - [1. System architecture](#1-system-architecture)
+- [1b. Agents & their responsibilities](#1b-agents--their-responsibilities)
 - [2. The A → B → C → D pipeline](#2-the-a--b--c--d-pipeline)
 - [3. Disclosure sequence (report → published)](#3-disclosure-sequence-report--published)
 - [4. State machine](#4-state-machine)
@@ -61,6 +62,37 @@ flowchart TB
     Room --> REC
 
     REC --> DASH["dashboards /<br/>scorecard / cost / report / desk"]
+```
+
+---
+
+## 1b. Agents & their responsibilities
+
+Who does what, and who hands what to whom. Humans make the two trust decisions;
+agents do everything that can be verified.
+
+```mermaid
+flowchart LR
+    subgraph H["👤 Humans — they decide"]
+        R["Researcher<br/>• files report + PoC<br/>• holds go-to-publish"]
+        V["Vendor<br/>• ships the patch<br/>• gives sign-off"]
+    end
+    subgraph A["🤖 Agents — they verify & coordinate"]
+        TK["⏱ Timekeeper<br/>• embargo clock + state machine<br/>• chases silence, escalates<br/>• gates PUBLISH on downstream readiness"]
+        RP["🔬 Repro<br/>• reproduces the bug in Docker<br/>• builds the vendor's REAL commit<br/>• attests every run — Layer D"]
+        AD["📝 Advisory<br/>• drafts the advisory from room history<br/>• grounds every claim in OSV<br/>• emits OSV / CVE 5.0 / GHSA — Layer C"]
+    end
+    WT["📡 Watch<br/>• monitors the OSV watchlist<br/>• proposes — never acts alone"]
+
+    R -->|report| TK
+    TK -->|verify this| RP
+    RP -->|TRIGGERED / SAFE / INCOMPLETE_FIX| TK
+    TK -->|notified, clock running| V
+    V -->|patch ref| TK
+    TK -->|VERIFIED_FIXED| AD
+    AD -->|draft for redline| R
+    AD -->|draft for redline| V
+    WT -.->|new CVE proposal| R
 ```
 
 ---
