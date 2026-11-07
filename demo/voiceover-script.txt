@@ -1,0 +1,15 @@
+In security, the patch usually exists. What breaks is the choreography between people who don't trust each other. And the fix often doesn't fix. Embargo Room runs the whole thing in one Switch room. Watch the agents work.
+
+A researcher files a bug. The repro agent runs the exploit itself, in Docker. Triggered. The agent's own run is the evidence, never the vendor's word.
+
+The vendor ships the fix, version one-point-two-point-five. The agent builds their actual commit from source. And it still triggers. Incomplete fix. The timekeeper refuses to advance, and the clock keeps running.
+
+The real fix, version one-point-two-point-six, is safe. Two independent sources agree. Both humans sign off. And only then is it published. The agents hold the clock. The trust decisions stay human.
+
+Every step is on the record, per agent. What each one did, graded against its service-level agreement, and costed. Nothing here is hand-maintained.
+
+Agents that run other people's code are a target, so it defends itself. Five attacks, all blocked. No one can forge the record or fake a verdict, and nothing publishes without a human.
+
+It runs on whatever chat app your team uses. Here, Slack. If Slack is overloaded or goes down, the work shifts to another bridge, and the disclosure continues. Because the truth is the portable record, not the platform.
+
+Zoom out. This isn't one bug. It's the desk a security team runs. Remove Switch, and it's disconnected bots and separate inboxes. As a Switch room, it's a disclosure desk you could run tomorrow. That's Embargo Room.
